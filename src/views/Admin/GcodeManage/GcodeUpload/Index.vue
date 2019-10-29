@@ -119,22 +119,35 @@
             <el-col :span="12">
               <div class="fileUpload_right">
                 <div style="display: flex;width: 350px">
-                  <span style="width: 120px;font-size: 16px;">*模型名:&emsp;</span>
-                  <el-input type="text" autocomplete="off" placeholder="请输入模型名" size="mini"></el-input>
+                  <span class="label_style">*模型名:&emsp;</span>
+                  <el-input type="text" autocomplete="off" placeholder="请输入模型名" size="small"></el-input>
                 </div>
-                <div style="display: flex;margin-top: 20px; width: 350px">
-                  <span style="width: 120px; font-size: 16px;">*类型:&emsp;&emsp;</span>
-                  <el-select v-model="value" placeholder="请选择" style="width: 100%">
+                <div class="line_style">
+                  <span class="label_style">*类别:&emsp;&emsp;</span>
+                  <el-select v-model="value_type" placeholder="请选择" style="width: 100%" size="small">
                     <el-option
-                      v-for="item in options"
+                      v-for="item in options_type"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
                     </el-option>
                   </el-select>
                 </div>
-                <div style="display: flex;margin-top: 20px; width: 350px">
-                  <span style="width: 120px; font-size: 16px">*说明:&emsp;&emsp;</span>
+
+                <div class="line_style">
+                  <span class="label_style">*状态:&emsp;&emsp;</span>
+                  <el-select v-model="value_status" placeholder="请选择" style="width: 100%" size="small">
+                    <el-option
+                      v-for="item in options_status"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </div>
+
+                <div class="line_style">
+                  <span class="label_style">*说明:&emsp;&emsp;</span>
                   <el-input
                     type="textarea"
                     maxlength="80"
@@ -173,7 +186,7 @@
                 dialogVisible: false,
                 textarea: '',
                 //类型选择
-                options: [{
+                options_type: [{
                     value: '选项1',
                     label: '黄金糕'
                 }, {
@@ -189,7 +202,16 @@
                     value: '选项5',
                     label: '北京烤鸭'
                 }],
-                value: ''
+                //状态
+                options_status: [{
+                    value: '选项1',
+                    label: '私密'
+                }, {
+                    value: '选项2',
+                    label: '公开'
+                }],
+                value_type: '',
+                value_status: '',
             };
         },
         methods: {
@@ -218,6 +240,7 @@
 <style lang="scss" scoped>
   .body {
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -229,6 +252,7 @@
       flex-direction: column;
       align-items: center;
       background: #fff;
+      box-shadow: #dedede 1px 1px 2px;
     }
     .homePicUpload {
       height: 350px;
@@ -237,6 +261,7 @@
       flex-direction: column;
       align-items: center;
       background: #fff;
+      box-shadow: #dedede 1px 1px 2px;
     }
     .prePicUpload {
       height: 350px;
@@ -245,6 +270,7 @@
       flex-direction: column;
       align-items: center;
       background: #fff;
+      box-shadow: #dedede 1px 1px 2px;
     }
   }
   .upload-demo {
@@ -268,6 +294,17 @@
     /*width: 50%;*/
     /*margin-left: 25%;*/
     height: 100%;
+    .line_style{
+      display: flex;
+      margin-top: 20px;
+      width: 350px
+    }
+    .label_style{
+      width: 120px;
+      font-size: 14px;
+      font-weight: bold;
+      /*color: #f4516c;*/
+    }
   }
   .btn{
     display: flex;

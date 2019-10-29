@@ -1,6 +1,6 @@
 <template>
   <div class="TopNavMenu">
-    <div class="TopNavMenu_main">
+    <div class="main">
       <div v-for="item in items" :key="item">
         <div class="TopNavMenu_main_text">{{item}}</div>
       </div>
@@ -9,7 +9,7 @@
       <div>
         <el-input
           size="medium"
-          placeholder="请输入内容"
+          placeholder="搜索模型"
           prefix-icon="el-icon-search"
           >
         </el-input>
@@ -35,45 +35,49 @@
         name: "TopNavMenu",
         data(){
             return{
-                items: ['首页','日用品','玩具','艺术品','动漫周边']
+                items: ['日用品','玩具','艺术品','动漫周边']
             };
         }
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .TopNavMenu{
     width: 100%;
+    display: flex;
+    position: fixed;
     height: 60px;
     background: #fff;
-    display: flex;
+    .main{
+      margin-left: 20%;
+      margin-right: auto;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      .TopNavMenu_main_text{
+        padding: 0 20px;
+        width: 60px;
+        font-size: 15px;
+        font-weight: bold;
+        color: #111;
+        cursor: pointer;
+        &:hover{
+          /*color: white;*/
+          cursor: pointer;
+        }
+      }
+
+    }
+    .TopNavMenu_search{
+      height: 100%;
+      margin-right: 20%;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      .TopNavMenu_search_button{
+        margin-left: 10px;
+      }
+    }
   }
-  .TopNavMenu .TopNavMenu_main{
-    height: 100%;
-    margin-left: 20%;
-    display: flex;
-    align-items: center;
-  }
-  .TopNavMenu_main .TopNavMenu_main_text{
-    padding: 10px;
-    width: 60px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  .TopNavMenu_main_text:hover{
-    background: #292421;
-    color: white;
-    cursor: pointer;
-  }
-  .TopNavMenu .TopNavMenu_search{
-    height: 100%;
-    margin-right: 20%;
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-  }
-  .TopNavMenu_search .TopNavMenu_search_button{
-    margin-left: 10px;
-  }
+
 </style>

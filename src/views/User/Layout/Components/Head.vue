@@ -2,25 +2,32 @@
   <div>
     <el-row>
       <el-col>
-        <div class="grid-content bg-purple-dark">
+        <div class="grid-content" id="topBar">
+          <div class="topbar_bg">
           <div class="topbar">
             <div class="topbar_title">欢迎访问本站</div>
-            <div class="text">
-              <template v-if="this.$store.state.user.userToken">
 
+            <div class="topbar_menu">
+              <div v-for="item in menu" :key="item">
+                <div class="topbar_menu_text" @click="clickListner(item.value)">{{item.name}}</div>
+              </div>
+            </div>
+
+            <div class="text">
+
+              <template v-if="this.$store.state.user.userToken">
                 <el-dropdown @command="">
                   <span class="el-dropdown-link">
                     {{this.$store.state.user.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="usercenter" @click.native="">个人中心</el-dropdown-item>
+                    <el-dropdown-item command="usercenter" @click.native="toUserCenter">个人中心</el-dropdown-item>
                     <el-dropdown-item command="logout" @click.native="userLogout">注销</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
-
               </template>
-              <template v-else-if="this.$store.state.admin.adminToken">
 
+              <template v-else-if="this.$store.state.admin.adminToken">
                 <el-dropdown @command="">
                   <span class="el-dropdown-link">
                     {{this.$store.state.admin.adminName}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -30,8 +37,8 @@
                     <el-dropdown-item command="logout" @click.native="adminLogout">注销</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
-
               </template>
+
               <template v-else>
                 <div class="login">
                   <el-dropdown @command="handleCommand">
@@ -48,6 +55,7 @@
               </template>
 
             </div>
+          </div>
           </div>
         </div>
       </el-col>
@@ -103,6 +111,10 @@
 <script>
     export default {
         name: "Head",
+
+        mounted(){
+
+        },
         data(){
             var checkPassword = (rule,value,callback) => {
                 if(value === ''){
@@ -117,8 +129,8 @@
             return{
                 //登录表单
                 loginForm: {
-                    username: '',
-                    password: ''
+                    username: 'test',
+                    password: '123'
                 },
                 // 注册表单
                 registerForm: {
@@ -153,10 +165,15 @@
                     pwd_confirm:[
                         { required: true,validator: checkPassword,trigger: 'blur'}
                     ]
-                }
+                },
+                menu: [
+                    {name: '首页',value: '/index'},
+                    {name: '资源模型',value: '/gcodeCenter'}
+                ]
             };
         },
         methods: {
+
             //用户登录
             login(loginForm) {
                 let that = this;
@@ -202,6 +219,7 @@
               }).then(() => {
                   this.$store.commit("clearUserToken");
                   this.$message.success("注销成功");
+                  this.$router.replace('/index');
               }).catch(() => {
 
               })
@@ -269,55 +287,86 @@
             //跳转至后台登录页
             toAdminLogin(){
                 this.$router.push('/adminLogin')
+            },
+            toUserCenter(){
+                this.$router.push('/userCenter/userInfo')
+            },
+            clickListner(url){
+                this.$router.push(url)
             }
         }
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .grid-content {
-    min-height: 60px;
+    line-height: 60px;
+    width: 100%;
     display: flex;
+    position: fixed;
+    top: 0;
+    z-index: 99;
+
+    .topbar_bg{
+      width: 100%;
+      background: #050827;
+      /*background: rgba(41,36,33,0.8);*/
+      color: #fff;
+    }
+
+    .topbar{
+      align-self: center;
+      display: flex;
+      width: 95%;
+      margin-left: 2.5%;
+      align-items: center;
+      .topbar_logo{
+        margin: 0 20px;
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+      .topbar_title{
+        color: #fff;
+        font-weight: bold;
+      }
+      .topbar_menu{
+        margin-left: 120px;
+        display: flex;
+        align-items: center;
+        .topbar_menu_text{
+          padding: 0 40px;
+          font-size: 15px;
+          font-weight: bold;
+          color: #fff;
+          cursor: pointer;
+          &:hover{
+            color: white;
+            cursor: pointer;
+          }
+        }
+
+      }
+      .text{
+        display: flex;
+        align-items: center;
+        margin-right: 0;
+        margin-left: auto;
+        .register{
+          color: #fff;
+          cursor: pointer;
+          font-size: 14px;
+        }
+        .login{
+          color: #fff;
+          margin-right: 20px;
+          font-size: 14px;
+        }
+      }
+    }
   }
-  .bg-purple-dark {
-    background: #475669;
-    /*background: #292421;*/
-  }
-  .grid-content .topbar{
-    align-self: center;
-    display: flex;
-    height: 100%;
-    width: 60%;
-    margin-left: 20%;
-    align-items: center;
-  }
-  .topbar .topbar_logo{
-    margin: 0 20px;
-    height: 30px;
-    width: 30px;
-    border-radius: 50%;
-    overflow: hidden;
-  }
-  .topbar .topbar_title{
-    color: #fff;
-    font-weight: bold;
-  }
-  .topbar .text{
-    display: flex;
-    align-items: center;
-    margin-right: 0px;
-    margin-left: auto;
-  }
-  .text .login{
-    color: #fff;
-    margin-right: 20px;
-    font-size: 14px;
-  }
-  .text .register{
-    color: #fff;
-    cursor: pointer;
-    font-size: 14px;
-  }
+
   .el-dropdown-link {
     cursor: pointer;
     color: #fff;

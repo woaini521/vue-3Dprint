@@ -1,62 +1,59 @@
 <template>
   <div>
-<!--    <el-divider content-position="left"><span style="font-weight: bold;">用户管理</span></el-divider>-->
     <div class="body">
-      <div class="table">
-        <el-table :data="tableData.filter(data => !search || data.username.toLowerCase().includes(search.toLowerCase()))"
-                   height="675px" header-row-style="height:75px" row-style="height: 60px" style="width: 100%" stripe border>
-          <el-table-column
-            type="selection"
-            width="55">
-          </el-table-column>
-          <el-table-column
-            label="账号"
-            prop="username">
-          </el-table-column>
-          <el-table-column
-            label="昵称"
-            prop="nickname">
-          </el-table-column>
-          <el-table-column
-            label="空间容量"
-            prop="space">
-          </el-table-column>
-          <el-table-column
-            label="已用空间"
-            prop="spaceUsed">
-          </el-table-column>
-          <el-table-column
-            label="注册时间"
-            prop="createDate">
-          </el-table-column>
-          <el-table-column
-            align="center">
-            <template slot="header" slot-scope="scope">
-              <el-input
-                v-model="search"
-                size="mini"
-                placeholder="输入账号搜索"/>
-            </template>
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="">重置密码</el-button>
-              <el-button
-                size="mini"
-                type="primary"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+      <div class="search">
+        <SearchView :colums="colums" @query="search"></SearchView>
+        <div class="btn">
+          <el-button type="danger" icon="el-icon-delete"  @click="doMulDelete">批量删除</el-button>
+        </div>
       </div>
-      <div class="pagination">
-        <Pagination
-          :total="page.totalSize"
-          @pageChange="pageChange"></Pagination>
+      <div class="table">
+        <el-table
+          :data="tableData"
+          height="675px"
+          header-row-style="height:75px"
+          row-style="height: 60px"
+          style="width: 100%"
+          fit
+          highlight-current-row
+          stripe
+          @select="handleSelectionChange">
+          <el-table-column type="selection" width="50" align="center"/>
+<!--          <el-table-column type="index" width="50" align="center" label="序号"/>-->
+          <template v-for="(item, key) in colums">
+            <el-table-column
+              v-if="item.visible && key !== 'operate'"
+              :key="key"
+              :label="item.label"
+              width="auto"
+              align="center"
+
+              show-overflow-tooltip>
+              <template slot-scope="scope">
+                <el-col>{{ scope.row[key] }}</el-col>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-else-if="key === 'operate'"
+              :key="key"
+              :label="item.label"
+              width="auto"
+              align="center"
+
+              show-overflow-tooltip>
+              <template slot-scope="scope">
+                <el-button size="mini" type="default" @click="handleEdit(scope.$index, scope.row)">重置密码</el-button>
+                <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+        <div class="pagination">
+          <Pagination
+            :total="page.totalSize"
+            @pageChange="pageChange"></Pagination>
+        </div>
       </div>
     </div>
   </div>
@@ -64,16 +61,22 @@
 
 <script>
     import Pagination from '@/components/Pagination';
+    import SearchView from '@/components/SearchView';
+    import columModel from './model/columModel';
 
     export default {
         name: "UserInfo",
-        components:{
-            'Pagination': Pagination
-        },
+        components: {Pagination,SearchView},
         data(){
             return {
+                //表格列
+                colums: columModel.new(),
+                //查询条件
+                query:{},
+                //表格选择
+                multipleSelection: [],
+
                 tableData: [],
-                search: '',
                 loading: true,
 
                 page:{
@@ -87,6 +90,11 @@
             this.getAllUser();
         },
         methods:{
+            search(model){
+                this.query = model;
+                console.log(this.query)
+                // this.getAllType();
+            },
             getAllUser(){
                 let that = this;
                 let loading = that.$loading.service({
@@ -95,7 +103,7 @@
                     lock: true,
                     target: document.querySelector('.table')
                 });
-                this.$axios.get(that.$api.user.getList, {
+                this.$axios.get(that.$api.userManage.getList, {
                     params: {
                         currentPage: this.page.currentPage,
                         pageSize: this.page.pageSize
@@ -114,6 +122,10 @@
                         console.log(res);
                     })
             },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+                console.log(this.multipleSelection)
+            },
             pageChange(page){
                 this.page.currentPage = page.currentPage;
                 this.page.pageSize = page.pageSize;
@@ -127,16 +139,23 @@
 <style lang="scss" scoped>
   .body {
     width: 100%;
-
-    .table {
-      margin-top: 20px;
-    }
-
-    .pagination {
+    .search{
       display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top:20px;
+      .btn {
+        margin: auto 0 auto auto;
+      }
+    }
+    .table {
+      margin-top: 10px;
+      padding-bottom: 20px;
+      background: #fff;
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
     }
   }
 </style>

@@ -8,8 +8,9 @@
 import UserIndex from "./views/User/Layout/Index";
 export default {
 
-  name: 'App',
-    components: {UserIndex}
+    name: 'App',
+    components: {UserIndex},
+
 }
 </script>
 
@@ -23,7 +24,8 @@ export default {
     height: 100%;
     -ms-overflow-style: none;
     overflow: -moz-scrollbars-none;
-    overflow: hidden;
+    overflow-y: hidden;
+    overflow-x: scroll;
   }
   ::-webkit-scrollbar {
     display: none;

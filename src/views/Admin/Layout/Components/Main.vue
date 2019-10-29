@@ -8,10 +8,14 @@
         :name="item.route"
       >
       </el-tab-pane>
-      <div class="scroll_view">
-        <keep-alive>
-          <router-view></router-view>
-        </keep-alive>
+      <div class="scroll_view" id="scroll_view">
+
+        <transition :name="direction">
+          <keep-alive>
+            <router-view v-if="isRouterAlive"></router-view>
+          </keep-alive>
+        </transition>
+
       </div>
     </el-tabs>
   </div>
@@ -22,10 +26,15 @@
         name: "Main",
         data(){
             return{
-
+                direction: "drop-down",
+                isRouterAlive:true
             };
         },
-
+        provide() {
+            return {
+                reload: this.reload
+            }
+        },
         computed: {
           activeIndex:{
               get(){
@@ -36,14 +45,10 @@
                   this.$store.commit('setActiveTab', val);
               }
           },
-          // activeIndex(){
-          //     return this.$store.state.activeIndex;
-          // },
           openTab(){
               return this.$store.state.openTab;
           }
         },
-
         methods:{
             //tab标签点击时，切换相应的路由
             tabClick(tab){
@@ -66,6 +71,13 @@
                         this.$router.push({path: '/admin/index'});
                     }
                 }
+            },
+            //路由刷新
+            reload(){
+                this.isRouterAlive = false;
+                this.$nextTick(function(){
+                    this.isRouterAlive = true;
+                })
             }
         }
     }
@@ -73,20 +85,47 @@
 
 <style lang="scss" scoped>
   .tabs {
-    display: flex;
+
     width: 100%;
     height: 100%;
-  }
-  .el-tabs {
-    background: #f5f5f5 !important;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: auto;
-    .scroll_view{
+    .el-tabs {
+      /*background: #f5f5f5 !important;*/
+      background-image: linear-gradient(to bottom right,#f5f5f5,#dedede,#050827);
       width: 100%;
       height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: auto;
+      .scroll_view{
+        width: calc(100% - 5px);
+        height: calc(100% - 5px);
+        margin: auto;
+      }
     }
+  }
+
+  .drop-down-enter-active,
+  /*.drop-down-leave-active,*/
+  .pull-up-enter-active,
+  .pull-up-leave-active {
+    will-change: transform;
+    transition: all .5s;
+    /*position: absolute;*/
+  }
+  .drop-down-enter {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+  .drop-down-leave-active {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+  .pull-up-enter {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+  .pull-up-leave-active{
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
   }
 </style>

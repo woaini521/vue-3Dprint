@@ -3,11 +3,11 @@
     <div class="page">
       <div class="page-container">
         <h1>后台管理</h1>
-        <el-form :model="adminForm" :rules="loginRules" ref="adminForm" label-width="70px" label-position="left">
-          <el-form-item label="用户名" prop="username" class="label">
+        <el-form :model="adminForm" :rules="loginRules" ref="adminForm" label-width="0px" label-position="left">
+          <el-form-item label="" prop="username" class="label">
             <el-input type="text" v-model="adminForm.username" autocomplete="off" placeholder="请输入用户名" class="input"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="password" class="label">
+          <el-form-item label="" prop="password" class="label">
             <el-input type="password" v-model="adminForm.password" autocomplete="off" placeholder="请输入密码" show-password class="input"></el-input>
           </el-form-item>
         </el-form>
@@ -24,10 +24,10 @@
             return{
                 //登录表单
                 adminForm:{
-                  username: '',
-                  password: ''
+                  username: 'admin',
+                  password: '123456'
                 },
-                imgurl: require('../../../static/background/adminLoginBackPic.jpg'),
+                imgurl: require('../../../static/background/Admin/Login/adminLoginBackPic.jpg'),
                 options:{
                     text: '正在加载',
                     spinner: "el-icon-loading",
@@ -125,15 +125,14 @@
 
 <style scoped>
   #Login{
-    background-image: url('../../../static/background/adminLoginBackPic.png');
-    background-size: 100% 100%;
-    background-position: center;
+    background-image: url('~@/static/background/Admin/Login/adminLoginBackPic.jpg');
+    background-size: cover;
+    background-position: center center;
     height: 100%;
     position: fixed;
     width: 100%
   }
   .page {
-
     -webkit-font-smoothing: antialiased;
     font-weight: 300;
     font-family: 'PT Sans', Helvetica, Arial, sans-serif;

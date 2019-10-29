@@ -54,11 +54,9 @@ service.interceptors.response.use(
     return response.data
   },
   error => {
-    // !!! 关闭 loading !!!
-    // store.dispatch('SetLoading', false)
 
-    const { response } = error
-    // 这里可以根据自己的业务做一些操作，比如说强制登出
+    const res = error;
+    Message.error(res);
 
     return Promise.reject(error)
   }

@@ -14,12 +14,17 @@
 
 <style scoped>
   .footer{
+    line-height: 150px;
     /*background: #79BBFF;*/
-    background: #475669;
+    /*background: #475669;*/
+    background: #050827;
+    /*background: #292421;*/
+    height: 300px;
+    text-align: center;
   }
   .footer .footbar{
-    width: 60%;
-    margin-left: 20%;
+    text-align: center;
+    padding: auto;
     color: white;
   }
 </style>

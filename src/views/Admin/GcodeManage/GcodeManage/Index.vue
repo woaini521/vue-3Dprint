@@ -5,7 +5,7 @@
     </div>
     <div class="table">
       <el-table :data="tableData.filter(data => !search || data.typename.toLowerCase().includes(search.toLowerCase()))"
-                 height="675px" header-row-style="height:75px" row-style="height: 60px" style="width: 100%" stripe border>
+                 height="675px" header-row-style="height:75px" row-style="height: 60px" style="width: 100%" stripe>
         <el-table-column
           type="selection"
           width="55">
@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column
           fixed="right"
-          width="250"
+          width="340"
           align="center">
           <template slot="header" slot-scope="scope">
             <el-input
@@ -64,14 +64,19 @@
               size="mini"
               type="danger"
               @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button
+              size="mini"
+              type="info"
+              @click="handleDelete(scope.$index, scope.row)">查看评论</el-button>
           </template>
         </el-table-column>
       </el-table>
-    </div>
-    <div class="pagination">
-      <Pagination
-        :total="page.totalSize"
-        @pageChange="pageChange"></Pagination>
+
+      <div class="pagination">
+        <Pagination
+          :total="page.totalSize"
+          @pageChange="pageChange"></Pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -105,7 +110,7 @@
             };
         },
         mounted(){
-
+          console.log("mounted");
         },
         methods:{
             pageChange(page){
@@ -127,12 +132,14 @@
     }
     .table{
       margin-top: 10px;
-    }
-    .pagination{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 20px;
+      padding-bottom: 20px;
+      background: #fff;
+      .pagination{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
     }
   }
 

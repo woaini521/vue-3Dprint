@@ -10,6 +10,7 @@ import GcodesUpload from "../views/Admin/GcodeManage/GcodesUpload/Index";
 import GcodeManagement from "../views/Admin/GcodeManage/GcodeManage/Index";
 import GcodeUpload from "../views/Admin/GcodeManage/GcodeUpload/Index";
 import GcodePic from '../views/Admin/GcodeManage/GcodePic/index';
+
 Vue.use(Router);
 
 const originalPush = Router.prototype.push;
@@ -123,6 +124,40 @@ export default new Router({
           }
         }
       ]
+    },
+    {
+      path: '/userCenter',
+      name: '用户中心',
+      component: ()=>import('../views/User/UserCenter/Index'),
+      meta: {
+        requireAuth: true
+      },
+      children:[
+        {
+          path: '/userCenter/userInfo',
+          name: '用户信息',
+          component: ()=>import('../views/User/UserInfo/Index'),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/userCenter/updatePwd',
+          name: '修改密码',
+          component: ()=>import('../views/User/UpdatePwd/Index'),
+          meta: {
+            requireAuth: true
+          }
+        }
+      ]
+    },
+    {
+      path: '/gcodeCenter',
+      name: '资源模型',
+      component: ()=>import('../views/User/GcodeCenter/Index'),
+      meta: {
+        requireAuth: false
+      }
     }
   ]
 })

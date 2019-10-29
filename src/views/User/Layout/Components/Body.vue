@@ -1,195 +1,316 @@
 <template>
-  <div>
-    <TopNavMenu></TopNavMenu>
-    <div class="carousel">
-      <el-carousel :interval="4000" height="700px">
-        <el-carousel-item v-for="item in urls" :key="item">
-<!--      <h3 class="medium">{{ item }}</h3>-->
-        <el-image :src="item" fit="fill" class="img"></el-image>
-      </el-carousel-item>
-      </el-carousel>
-    </div>
+  <div class="body">
 
-    <div class="tip">
-      <el-card class="box-card" shadow="always">
-        <!--        <div class="title1">欢迎使用</div>-->
-        <div class="title2">欢迎使用  嘉园-普瑞特 3D打印云平台</div>
-      </el-card>
+    <div class="carousel" id="carousel">
+      <video muted="muted" height="600" width="100%" loop autoplay>
+        <source src="https://cdnimg.3dzao.cn/first5s.mp4" type="video/mp4">
+      </video>
+      <div class="title">
+        <div class="title_text1">3D PRINT</div>
+        <div class="title_text2">生产资源平台</div>
+      </div>
+<!--      <el-carousel :interval="4000" height="800px">-->
+<!--        <el-carousel-item v-for="item in urls" :key="item">-->
+<!--&lt;!&ndash;      <h3 class="medium">{{ item }}</h3>&ndash;&gt;-->
+<!--        <el-image :src="item" fit="fill" class="img"></el-image>-->
+<!--      </el-carousel-item>-->
+<!--      </el-carousel>-->
     </div>
-
-<!--    <el-divider content-position="center"></el-divider>-->
+    <div class="intro">
+      <div class="title">平台介绍</div>
+      <div class="body">
+        <div class="part">
+          <div class="pic left"></div>
+          <div class="text">
+            市场调研、产品定位、品牌核心价值提炼、品牌个性与品牌形象塑造、营销传播方案等策略内容。品牌形象、视觉识别系统（VI）设计、产品包装、销售道具、广告宣传品等设计内容。品牌／产品命名、Slogan、品牌故事、广告主题、创意脚本、活动标题、推文、软文等文案内容。
+          </div>
+        </div>
+        <div class="part">
+          <div class="pic middle"></div>
+          <div class="text">
+            市场调研、产品定位、品牌核心价值提炼、品牌个性与品牌形象塑造、营销传播方案等策略内容。品牌形象、视觉识别系统（VI）设计、产品包装、销售道具、广告宣传品等设计内容。品牌／产品命名、Slogan、品牌故事、广告主题、创意脚本、活动标题、推文、软文等文案内容。
+          </div>
+        </div>
+        <div class="part">
+          <div class="pic right"></div>
+          <div class="text">
+            市场调研、产品定位、品牌核心价值提炼、品牌个性与品牌形象塑造、营销传播方案等策略内容。品牌形象、视觉识别系统（VI）设计、产品包装、销售道具、广告宣传品等设计内容。品牌／产品命名、Slogan、品牌故事、广告主题、创意脚本、活动标题、推文、软文等文案内容。
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="starproducts">
       <div class="text1">精选模型</div>
-      <div class="text2">精心为您挑选的模型，希望喜欢</div>
-
-      <el-row :gutter="5">
-        <el-col :span="6" v-for="(o, index) in 4" :key="o" >
-          <el-card shadow="none" class="card">
-            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+<!--      <div class="text2">精心为您挑选的模型，希望喜欢</div>-->
+      <el-row style="width: 95%;">
+        <el-col :span="6" v-for="item in model" :key="o" >
+          <el-card shadow="none" class="card" :body-style="{ padding: '0px' }">
+            <el-image :src=item.url fit="fill" class="image"></el-image>
             <div class="card-text">
-              <span>模型</span>
+              <span>{{item.label}}</span>
             </div>
           </el-card>
         </el-col>
       </el-row>
     </div>
-
     <div class="more">
       <div class="text1">更多精彩模型在等你哦</div>
-      <el-button type="primary" round style="color: #fff">更多模型</el-button>
+      <el-button type="primary" round size="medium" >更多模型</el-button>
     </div>
   </div>
 </template>
 
 <script>
-    import TopNavMenu from "./TopNavMenu/TopNavMenu";
+    import TopNavMenu from "../../GcodeCenter/Components/TopNavMenu/TopNavMenu";
+    import Head from "./Head";
     export default {
         name: "Body",
-        components: {TopNavMenu},
+        components: {Head, TopNavMenu},
+        mounted(){
+
+
+        },
         data(){
             return{
-                urls: [
-                    'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-                    'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg'
-                ]
+                model: [
+                    {url: require('@/static/background/Home/timg1.jpg'),label: "日用品"},
+                    {url: require('@/static/background/Home/timg2.jpg'),label: "玩具"},
+                    {url: require('@/static/background/Home/timg3.jpg'),label: "动漫周边"},
+                    {url: require('@/static/background/Home/timg4.jpg'),label: "艺术"}
+                ],
+                isFix: false,
             };
+        },
+        methods:{
+
         }
     }
 </script>
 
-<style scoped>
-  .tip{
-    /*text-align: center;*/
-    display: flex;
-  }
-  .box-card {
-    /*width: 40%;*/
-    /*margin-left: 30%;*/
+<style lang="scss" scoped>
+
+  /*.tip{*/
+  /*  height: 120px;*/
+  /*  display: flex;*/
+  /*  overflow-y: scroll;*/
+  /*}*/
+  /*.box-card {*/
+  /*  width: 100%;*/
+  /*  margin-top: 0px;*/
+  /*  margin-bottom: 40px;*/
+  /*  display: flex;*/
+  /*  flex-direction: column;*/
+  /*  justify-content: center;*/
+  /*  align-items: center;*/
+  /*  background: #fff;*/
+  /*  box-shadow: grey 0 0 15px;*/
+  /*}*/
+  /*.box-card:hover{*/
+  /*  background: #fff;*/
+  /*  color: #111;*/
+  /*}*/
+
+  /*.box-card .title{*/
+  /*  font-size: 26px;*/
+  /*  font-weight: bold;*/
+  /*  font-style: normal;*/
+  /*  height: 60px;*/
+  /*  display: flex;*/
+  /*  align-items: center;*/
+  /*  justify-content: center;*/
+  /*}*/
+  .body{
     width: 100%;
-    margin-top: 0px;
-    margin-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /*border-radius: 50px;*/
-    background: #fff;
-    /*color: #ffffff;*/
-    box-shadow: grey 0px 0px 15px;
-  }
-  .box-card:hover{
-    background: #fff;
-    color: #111;
-  }
-  .box-card .title1{
-    font-size: 18px;
-    font-weight: bold;
-    font-style: italic;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .box-card .title2{
-    font-size: 26px;
-    font-weight: bold;
-    font-style: normal;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .carousel{
-    height: 100%;
-    width: 100%;
-  }
-  .el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    opacity: 0.75;
-    line-height: 200px;
-    margin: 0;
-  }
-  .el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-  }
-  .el-carousel__item:nth-child(2n+1) {
-    background-color: #d3dce6;
-  }
-  .img{
-    width: 100%;
-    height: 100%;
-  }
-  .starproducts{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 420px;
-  }
-  .starproducts .text1{
-    height: 50px;
-    font-size: 26px;
-    font-weight: bold;
-    font-style: normal;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .starproducts .text2{
-    height: 50px;
-    font-size: 14px;
-    font-weight: bold;
-    font-style: normal;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .card{
-    margin: 40px;
-    background: #f6f6f6;
-  }
-  .card:hover{
-    background: #fff;
-    box-shadow: lightgray 0 0 20px;
-  }
-  .card .card-text{
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-  }
-  .image {
-    width: 100%;
-    display: block;
+    .carousel{
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: #f5f5f5;
+      video {
+        object-fit: fill;
+      }
+      .img{
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        float: left;
+        width: 100%;
+        height: 100%;
+        background-position: center center;
+        background-size: cover;
+        overflow: hidden;
+        background-image: url('~@/static/background/Home/aboutnr_01.jpg');
+      }
+      .title{
+        position: absolute;
+        top: 180px;
+        left: 15%;
+        overflow: auto;
+        text-align: center;
+        .title_text1{
+          font-size: 100px;
+          color: #fff;
+          font-weight: bold;
+        }
+        .title_text2{
+          font-size: 50px;
+          color: #fff;
+          font-weight: bold;
+        }
+      }
+    }
+    .intro{
+      background: #f5f5f5;
+      padding: 100px 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;;
+      text-align: center;
+      .title{
+        padding-bottom: 10px;
+        margin: 0 auto;
+        font-weight: bold;
+        font-size: 32px;
+        border-bottom: darkorange 3px solid;
+      }
+      .body{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        .part{
+          width: 300px;
+          height: 100%;
+          margin: 40px;
+          .pic{
+            height: 200px;
+            width: 100%;
+            background-position: center center;
+            background-size: cover;
+            overflow: hidden;
+            border-radius: 10px;
+            &.left{
+              background-image: url('~@/static/background/Home/p1.jpg');
+            }
+            &.right{
+              background-image: url('~@/static/background/Home/p2.jpg');
+            }
+            &.middle{
+              background-image: url('~@/static/background/Home/p3.jpg');
+            }
+          }
+          .pic:hover{
+            transform: scale(1.2,1.2);
+            transition: transform .5s;
+          }
+          .text{
+            margin-top: 40px;
+            font-size: 16px;
+            font-style: normal;
+          }
+        }
+
+      }
+    }
+    .bg{
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      float: left;
+      width: 100%;
+      height: 500px;
+      background-position: center center;
+      background-size: cover;
+      overflow: hidden;
+      background-attachment: fixed;
+      background-image: url('~@/static/background/Home/features-bg.jpg');
+    }
+
+    .starproducts{
+      width: 100%;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 100px 0;
+      .text1{
+        font-size: 32px;
+        font-weight: bold;
+        padding-bottom: 10px;
+        margin: 0 auto;
+        border-bottom: darkorange 3px solid;
+      }
+      .text2{
+        height: 50px;
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .card{
+        margin: 40px 10px;
+        background: #fff;
+        height: 500px;
+        padding: 0;
+        .card-text{
+          width: 100%;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 18px;
+        }
+        &:hover{
+          background: #fff;
+          box-shadow: grey 0 0 10px;
+          cursor: pointer;
+        }
+        .image {
+          height: 450px;
+          width: 100%;
+        }
+      }
+    }
+    .more{
+      width: 100%;
+      height: 500px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-position: center center;
+      background-size: cover;
+      background-attachment: fixed;
+      background-image: url('~@/static/background/Home/features-bg.jpg');
+      .text1{
+        height: 50px;
+        font-size: 20px;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+      }
+      .el-button{
+        margin-top: 20px;
+        color: #fff;
+        font-weight: bold;
+      }
+    }
   }
 
-  .more{
-    height: 350px;
-    background: #ececec;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: grey 0px 0px 20px;
-  }
-  .more .text1{
-    height: 50px;
-    font-size: 14px;
-    font-weight: bold;
-    font-style: normal;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .more .el-button{
-    color: #111;
-    font-weight: bold;
-  }
+
 </style>

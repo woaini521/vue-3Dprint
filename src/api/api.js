@@ -2,9 +2,19 @@ export default {
   user:{
     login: 'user/login',
     register: 'user/register',
-    getList: 'admin/getUserList'
+
   },
   admin:{
-    login: 'admin/login'
+    login: 'admin/login',
+  },
+  gcodeType:{
+    getAllType: 'gcodeType/getAllType',
+    addType: 'gcodeType/addType',
+    deleteType: 'gcodeType/deleteType',
+    deleteTypeMul: 'gcodeType/deleteTypeMul',
+    updateType: 'gcodeType/updateType'
+  },
+  userManage:{
+    getList: 'userManage/getUserList'
   }
 }

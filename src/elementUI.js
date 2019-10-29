@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { PageHeader,Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Container,Header,Aside,Main,Footer,RadioGroup, Input,Button,
   Dropdown,DropdownItem,DropdownMenu,Dialog,Form,FormItem,Image,Carousel,CarouselItem,Divider,Card,Table,TableColumn,
-  Pagination,Tabs,TabPane,Upload,Select,Option,Collapse,CollapseItem,Message,MessageBox,Loading } from 'element-ui';
+  Pagination,Tabs,TabPane,Upload,Select,Option,Collapse,CollapseItem,DatePicker,Message,MessageBox,Loading } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.use(PageHeader);
@@ -40,6 +40,7 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(Collapse);
 Vue.use(CollapseItem);
+Vue.use(DatePicker);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$messageBox = MessageBox;
