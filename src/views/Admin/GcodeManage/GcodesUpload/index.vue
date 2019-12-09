@@ -10,7 +10,7 @@
             <el-upload
               class="upload-demo"
               ref="gcodeList"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action=""
               :on-preview="handlePreview"
               :file-list="gcodeList"
               :auto-upload="false"
@@ -28,20 +28,36 @@
         </el-col>
         <el-col :span="12">
           <div class="right">
+
             <div class="select">
-              <span style="width: 80px; font-size: 16px;">*类型:</span>
-              <el-select v-model="value" placeholder="请选择" style="width: 100%">
+              <span style="width: 80px">*类型:</span>
+              <el-select v-model="value_type" placeholder="请选择" style="width: 100%" size="small">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in options_type"
+                  :key="item.typeId"
+                  :label="item.typeName"
+                  :value="item.typeId">
+                </el-option>
+              </el-select>
+            </div>
+
+            <div class="select">
+              <span style="width: 80px">*状态:</span>
+              <el-select v-model="value_status" placeholder="请选择" style="width: 100%" size="small">
+                <el-option
+                  v-for="item in options_status"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
                 </el-option>
               </el-select>
             </div>
+
             <div class="btn">
-              <el-button type="primary" size="medium">上传</el-button>
+              <el-button style="" size="small" type="primary" @click="submitUpload">上传</el-button>
+              <el-button style="margin-left: 40px;" size="small" type="danger" @click="submitUpload">重置</el-button>
             </div>
+
           </div>
         </el-col>
       </el-row>
@@ -83,9 +99,40 @@
         name: "GcodesUpload",
         data() {
             return {
-                activeNames: ['1']
+                activeNames: ['1'],
+
+                //类型选择
+                options_type: [],
+                //状态
+                options_status: [{
+                    value: '选项1',
+                    label: '私密'
+                }, {
+                    value: '选项2',
+                    label: '公开'
+                }],
+                value_type: '',
+                value_status: '',
             };
         },
+        mounted(){
+            this.getSelectItems();
+        },
+        methods:{
+            getSelectItems(){
+                let that = this;
+                that.$axios.get(that.$api.gcodeType.getItems)
+                    .then(res => {
+                        setTimeout(function () {
+                            if(res.code === 200){
+                                that.options_type = res.data
+                            }
+                        },500);
+                    }).catch(res => {
+
+                })
+            },
+        }
     }
 </script>
 
@@ -96,13 +143,16 @@
     display: flex;
     flex-direction: column;
     .fileUpload{
-      width: 100%;
+      width: 95%;
       height: 350px;
-      margin: 20px 0;
+      margin: 20px auto;
       background: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
+      border-radius: 8px;
+      /*border: #dedede 1px solid;*/
+      box-shadow: #b8bacc 0px 2px 4px;
       .left{
         display: flex;
         height: 100%;
@@ -112,6 +162,7 @@
       }
       .right{
         display: flex;
+        flex-direction: column;
         height: 100%;
         justify-content: center;
         align-items: center;
@@ -119,22 +170,30 @@
           display: flex;
           width: 300px;
           align-items: center;
+          font-size: 14px;
+          font-weight: bold;
+          margin: 10px;
+          color: #050827;
         }
         .btn{
-          margin-left: 20px;
+          margin: 20px 0 20px 40px;
         }
       }
     }
     .tip{
-      width: 100%;
+      width: 95%;
       background: #fff;
-      margin: 20px 0;
+      margin: 20px auto;
+      border-radius: 8px;
+      /*border: #dedede 1px solid;*/
+      box-shadow: #b8bacc 0px 2px 4px;
       .el-collapse{
+        border-radius: 8px;
         padding: 0 20px;
         color: #ef4300;
       }
       .img{
-        width: 500px;
+        width: 400px;
         height: auto;
       }
     }

@@ -1,4 +1,5 @@
 <template>
+<!--  050827-->
   <el-menu
     router="true"
     :default-active="this.$route.path"
@@ -6,7 +7,7 @@
     class="el-menu-vertical-demo"
     @open="handleOpen"
     @close="handleClose"
-    background-color="#050827"
+    background-color="#292421"
     text-color="#fff"
     active-text-color="#409EFF">
     <template v-if="this.$store.state.user.userToken || this.$store.state.admin.adminToken">
@@ -42,13 +43,15 @@
 <style lang="scss" scoped>
 
   .el-menu-vertical-demo {
-    height: 100%;
+    /*height: 100%;*/
+    min-height: 300px;
     width: 200px;
     text-align: left;
+    box-shadow: #b8bacc 0 2px 4px;
   }
 
   .el-menu-vertical-demo:not(.el-menu--collapse) {
-    height: 100%;
+    /*height: 100%;*/
     width: 200px;
     text-align: left;
   }

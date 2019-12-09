@@ -17,7 +17,7 @@ export default {
         'width': '250px',
         'visible': true
       },
-      'createTime':{
+      'createDate':{
         'type': 'date',
         'label': '创建日期',
         'queryable': false,

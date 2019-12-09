@@ -3,7 +3,7 @@
 
     <div class="carousel" id="carousel">
       <video muted="muted" height="600" width="100%" loop autoplay>
-        <source src="https://cdnimg.3dzao.cn/first5s.mp4" type="video/mp4">
+        <source src="http://122.51.75.23:8081/video/first5s.mp4" type="video/mp4">
       </video>
       <div class="title">
         <div class="title_text1">3D PRINT</div>
@@ -55,7 +55,7 @@
       </el-row>
     </div>
     <div class="more">
-      <div class="text1">更多精彩模型在等你哦</div>
+      <div class="text1">更多精彩模型</div>
       <el-button type="primary" round size="medium" >更多模型</el-button>
     </div>
   </div>
@@ -90,36 +90,6 @@
 
 <style lang="scss" scoped>
 
-  /*.tip{*/
-  /*  height: 120px;*/
-  /*  display: flex;*/
-  /*  overflow-y: scroll;*/
-  /*}*/
-  /*.box-card {*/
-  /*  width: 100%;*/
-  /*  margin-top: 0px;*/
-  /*  margin-bottom: 40px;*/
-  /*  display: flex;*/
-  /*  flex-direction: column;*/
-  /*  justify-content: center;*/
-  /*  align-items: center;*/
-  /*  background: #fff;*/
-  /*  box-shadow: grey 0 0 15px;*/
-  /*}*/
-  /*.box-card:hover{*/
-  /*  background: #fff;*/
-  /*  color: #111;*/
-  /*}*/
-
-  /*.box-card .title{*/
-  /*  font-size: 26px;*/
-  /*  font-weight: bold;*/
-  /*  font-style: normal;*/
-  /*  height: 60px;*/
-  /*  display: flex;*/
-  /*  align-items: center;*/
-  /*  justify-content: center;*/
-  /*}*/
   .body{
     width: 100%;
     .carousel{
@@ -167,7 +137,7 @@
       }
     }
     .intro{
-      background: #f5f5f5;
+      background: #f2f2f2;
       padding: 100px 0;
       width: 100%;
       display: flex;

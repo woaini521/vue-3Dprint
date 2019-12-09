@@ -21,7 +21,7 @@ Vue.prototype.$aes = aes;
 router.beforeEach((to,from,next) => {
   if(to.meta.requireAdminAuth){
     //需要管理员认证
-    if(store.state.admin.adminToken){
+    if(store.state.TOKEN.adminToken){
       next()
     }else{
       next({
@@ -31,7 +31,7 @@ router.beforeEach((to,from,next) => {
     }
   }else if(to.meta.requireAuth){
     //需要认证
-    if(store.state.user.userToken){
+    if(store.state.TOKEN.userToken){
       next()
     }else{
       next({

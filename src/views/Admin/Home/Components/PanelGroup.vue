@@ -51,9 +51,7 @@
     // import CountTo from 'vue-count-to'
 
     export default {
-        // components: {
-        //     CountTo
-        // },
+
         methods: {
             handleSetLineChartData(type) {
                 this.$emit('handleSetLineChartData', type)
@@ -76,8 +74,10 @@
       overflow: hidden;
       color: #666;
       background: #fff;
-      box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-      border-color: rgba(0, 0, 0, .05);
+      border-radius: 8px;
+      box-shadow: #b8bacc 0 2px 4px;
+      /*box-shadow: 4px 4px 5px rgba(0, 0, 0, .05);*/
+      /*border-color: rgba(0, 0, 0, .05);*/
       &:hover {
         .card-panel-icon-wrapper {
           color: #fff;

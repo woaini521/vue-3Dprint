@@ -15,10 +15,10 @@
 
             <div class="text">
 
-              <template v-if="this.$store.state.user.userToken">
+              <template v-if="this.$store.state.TOKEN.userToken">
                 <el-dropdown @command="">
                   <span class="el-dropdown-link">
-                    {{this.$store.state.user.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{this.$store.state.TOKEN.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="usercenter" @click.native="toUserCenter">个人中心</el-dropdown-item>
@@ -27,10 +27,10 @@
                 </el-dropdown>
               </template>
 
-              <template v-else-if="this.$store.state.admin.adminToken">
+              <template v-else-if="this.$store.state.TOKEN.adminToken">
                 <el-dropdown @command="">
                   <span class="el-dropdown-link">
-                    {{this.$store.state.admin.adminName}}<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{this.$store.state.TOKEN.adminName}}<i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="usercenter" @click.native="toAdminIndex">后台管理</el-dropdown-item>
@@ -75,7 +75,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="resetLoginForm('loginForm')">取 消</el-button>
-          <el-button type="primary" @click="login('loginForm')">确 定</el-button>
+          <el-button type="primary" @click="login('loginForm')" :loading="loading">确 定</el-button>
         </div>
     </el-dialog>
 
@@ -99,7 +99,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="resetRegisterForm('registerForm')">取 消</el-button>
-          <el-button type="primary" @click="register('registerForm')">确 定</el-button>
+          <el-button type="primary" @click="register('registerForm')" :loading="loading">确 定</el-button>
         </div>
     </el-dialog>
 
@@ -127,6 +127,7 @@
                 }
             };
             return{
+                loading: false,
                 //登录表单
                 loginForm: {
                     username: 'test',
@@ -179,32 +180,33 @@
                 let that = this;
                 that.$refs[loginForm].validate((valid) =>{
                     if(valid){
-                        let loading = that.$loading.service({
-                            text: '正在加载',
-                            spinner: "el-icon-loading",
-                            lock: true,
-                            background: "rgba(0, 0, 0, 0.8)",
-                            //target: document.querySelector('.dialog')
-                        });
+                        that.loading = true;
+                        // let loading = that.$loading.service({
+                        //     text: '正在登录',
+                        //     lock: true,
+                        //     background: "rgba(0, 0, 0, 0.8)"
+                        // });
 
                         let password = that.$aes.encrypt(that.loginForm.password);
-                        that.$axios.post(that.$api.user.login,{
+                        that.$axios.post(that.$api.userInfo.login,{
                             username: that.loginForm.username,
                             password: password
                         }).then(res => {
                             console.log(res);
                             setTimeout(function () {
-                                loading.close();
-                                if(res.code === 200){
+                                // loading.close();
+                                that.loading = false;
+                                if(res.data.code === 200){
                                     //登录成功，设置cookie
-                                    that.$store.commit("saveUserToken",{"userName":that.loginForm.username,"userToken":that.loginForm.username});
+                                    that.$store.commit("saveUserToken",{"userName":that.loginForm.username,"userToken":res.headers['authorization']});
                                 }
                                 //初始化表单
                                 that.resetLoginForm(loginForm)
                             },500);
                         }).catch(res =>{
-                            loading.close();
+                            // loading.close();
                             console.log(res)
+                            that.loading = false
                         })
                     }
                 });
@@ -242,20 +244,21 @@
                 var that = this;
                 that.$refs[registerForm].validate((valid) =>{
                     if(valid){
-                        let loading = that.$loading.service({
-                            text: '正在加载',
-                            spinner: "el-icon-loading",
-                            lock: true,
-                            background: "rgba(0, 0, 0, 0.8)"
-                        });
+                        that.loading = true;
+                        // let loading = that.$loading.service({
+                        //     text: '正在加载',
+                        //     lock: true,
+                        //     background: "rgba(0, 0, 0, 0.8)"
+                        // });
 
                         let password = that.$aes.encrypt(that.registerForm.pwd);
-                        that.$axios.post(that.$api.user.register,{
+                        that.$axios.post(that.$api.userInfo.register,{
                             username: that.registerForm.username,
                             nickname: that.registerForm.nickname,
                             password: password
                         }).then(res => {
-                            console.log(res);
+                            // console.log(res);
+                            that.loading = false;
                             setTimeout(function () {
                                 loading.close();
                                 if(res.code === 200){
@@ -264,8 +267,9 @@
                                 }
                             },500);
                         }).catch(res =>{
-                            loading.close();
+                            // loading.close();
                             console.log(res)
+                            that.loading = false;
                         })
                     }
                 });
@@ -309,8 +313,8 @@
 
     .topbar_bg{
       width: 100%;
-      background: #050827;
-      /*background: rgba(41,36,33,0.8);*/
+      /*background: #050827;*/
+      background: #292421;
       color: #fff;
     }
 

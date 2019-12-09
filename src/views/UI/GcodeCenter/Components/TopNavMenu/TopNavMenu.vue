@@ -2,7 +2,7 @@
   <div class="TopNavMenu">
     <div class="main">
       <div v-for="item in items" :key="item">
-        <div class="TopNavMenu_main_text">{{item}}</div>
+        <div class="TopNavMenu_main_text">{{item.typeName}}</div>
       </div>
     </div>
     <div class="TopNavMenu_search">
@@ -20,13 +20,6 @@
         <el-button type="info" icon="el-icon-search" circle style="height: 100%; width: 100%"></el-button>
       </div>
     </div>
-<!--  <el-menu :default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect">-->
-<!--    <el-menu-item index="1" style="margin-left: 20%">首页</el-menu-item>-->
-<!--    <el-menu-item index="2">日用品</el-menu-item>-->
-<!--    <el-menu-item index="3">玩具</el-menu-item>-->
-<!--    <el-menu-item index="4">艺术品</el-menu-item>-->
-<!--    <el-menu-item index="5">动漫周边</el-menu-item>-->
-<!--  </el-menu>-->
   </div>
 </template>
 
@@ -37,17 +30,39 @@
             return{
                 items: ['日用品','玩具','艺术品','动漫周边']
             };
+        },
+        created(){
+            this.getAllType();
+        },
+        methods: {
+            /**
+             * 获取所有类型
+             */
+            getAllType() {
+                let that = this;
+                that.$axios.get(that.$api.gcodeType.getItems)
+                    .then(res => {
+                        console.log(res)
+                        if(res.code === 200){
+                            that.items = res.data
+                        }
+                    }).catch(res => {
+
+                })
+            }
         }
     }
 </script>
 
 <style lang="scss" scoped>
   .TopNavMenu{
+    z-index: 999;
     width: 100%;
     display: flex;
     position: fixed;
     height: 60px;
     background: #fff;
+    box-shadow: #b8bacc 0 2px 4px;
     .main{
       margin-left: 20%;
       margin-right: auto;

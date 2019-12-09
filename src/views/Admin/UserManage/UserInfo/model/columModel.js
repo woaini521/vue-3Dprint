@@ -1,7 +1,7 @@
 export default {
   new: function () {
     return{
-      'username':{
+      'userName':{
         'type': 'string',
         'label': '账号',
         'queryable': true,
@@ -9,7 +9,7 @@ export default {
         'width': '250px',
         'visible': true
       },
-      'nickname':{
+      'nickName':{
         'type': 'string',
         'label': '昵称',
         'queryable': true,

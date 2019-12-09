@@ -3,8 +3,8 @@
     <el-col>
       <div class="grid-content bg-purple-dark">
         <div class="topbar">
-          <img src="../../../../static/logo.png" class="topbar_logo">
-          <div class="topbar_title">欢迎访问</div>
+<!--          <img src="../../../../../static/favicon.ico" class="topbar_logo">-->
+          <div class="topbar_title">3D PRINT</div>
           <div class="dropdowm">
             <el-dropdown @command="">
                   <span class="el-dropdown-link">
@@ -54,7 +54,7 @@
     flex-direction: column;
   }
   .bg-purple-dark {
-    /*background: #79BBFF;*/
+/*    background-image: linear-gradient(to right,#f5f5f5,#dedede,#050827);*/
     background: #fff;
   }
   .grid-content .topbar{
@@ -84,8 +84,8 @@
   }
   .el-dropdown-link {
     cursor: pointer;
-    color: #111;
     font-weight: bold;
+    color: #000;
   }
   .el-icon-arrow-down {
     font-size: 14px;

@@ -70,8 +70,8 @@
 
 <style lang="scss" scoped>
   .body{
-    width: 100%;
-    height: 100%;
+    width: 95%;
+    margin: 0 auto;
     .left{
       margin: 20px 20px 20px 0;
       height: 350px;
@@ -79,6 +79,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      border-radius: 8px;
+      box-shadow: #b8bacc 0px 2px 4px;
       .main{
         text-align: center;
         margin: auto;
@@ -95,6 +97,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      border-radius: 8px;
+      box-shadow: #b8bacc 0px 2px 4px;
       .main{
         text-align: center;
         margin: auto;

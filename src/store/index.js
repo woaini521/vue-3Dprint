@@ -7,13 +7,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state:{
     //登录状态管理
-    user:{
+    TOKEN:{
       userName: Cookie.get("userName"),
       userToken: Cookie.get("userToken"),
-    },
-    admin:{
       adminName: Cookie.get("adminName"),
-      adminToken: Cookie.get("adminToken"),
+      adminToken: Cookie.get("adminToken")
     },
     //加载
     loading:{
@@ -23,29 +21,30 @@ export default new Vuex.Store({
     //tabs标签管理
     openTab:[],//所有打开的路由
     activeIndex: '/admin/index', //激活的页面路由
+    imgUrl: 'http://localhost:8081',
   },
   mutations:{
     saveUserToken(state,userToken){
-      state.user.userName = userToken.userName;
-      state.user.userToken = userToken.userToken;
-      Cookie.set("userName",userToken.userName,{expires: 7});
-      Cookie.set("userToken",userToken.userToken,{expires: 7});
-    },
-    saveAdminToken(state,adminToken){
-      state.admin.adminName = adminToken.adminName;
-      state.admin.adminToken = adminToken.adminToken;
-      Cookie.set("adminName",adminToken.adminName,{expires: 7});
-      Cookie.set("adminToken",adminToken.adminToken,{expires: 7});
+      state.TOKEN.userName = userToken.userName;
+      state.TOKEN.userToken = userToken.userToken;
+      Cookie.set("userName",userToken.userName);
+      Cookie.set("userToken",userToken.userToken);
     },
     clearUserToken(state){
-      state.user.userName = null;
-      state.user.userToken = null;
+      state.TOKEN.userName = null;
+      state.TOKEN.userToken = null;
       Cookie.remove("userName");
       Cookie.remove("userToken");
     },
+    saveAdminToken(state,userToken){
+      state.TOKEN.adminName = userToken.adminName;
+      state.TOKEN.adminToken = userToken.adminToken;
+      Cookie.set("adminName",userToken.adminName);
+      Cookie.set("adminToken",userToken.adminToken);
+    },
     clearAdminToken(state){
-      state.admin.adminName = null;
-      state.admin.adminToken = null;
+      state.TOKEN.adminName = null;
+      state.TOKEN.adminToken = null;
       Cookie.remove("adminName");
       Cookie.remove("adminToken");
     },

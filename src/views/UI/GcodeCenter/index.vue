@@ -13,10 +13,10 @@
           <el-row :gutter="15" style="width: 100%">
             <el-col :span="6" v-for="item in model" :key="o">
               <el-card :body-style="{ padding: '0px'}" shadow="never">
-                <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
-                <div style="padding: 5px 14px;display: flex;align-items: center">
-                  {{item.name}}
-                  <div style="color: #b8bacc;font-size: 12px;">&emsp;(公共模型)</div>
+                <img :src="url + item.homePic" class="image">
+                <div class="txt">
+                  {{item.gcodeName}}
+                  <div style="color: #b8bacc;font-size: 12px;">&emsp;{{item.statusId}}</div>
                   <el-button type="text" class="button">下载</el-button>
                 </div>
               </el-card>
@@ -41,7 +41,7 @@
 <script>
     import TopNavMenu from "./Components/TopNavMenu/TopNavMenu";
     import Head from "../Layout/Components/Head";
-    import NavMenu from "../../User/GcodeCenter/Components/NavMenu";
+    import NavMenu from "../GcodeCenter/Components/NavMenu";
     import Pagination from '@/components/Pagination';
 
     export default {
@@ -49,33 +49,8 @@
         components: {NavMenu, Head, TopNavMenu, Pagination},
         data(){
             return{
-                model:[
-                    {
-                        url: '',
-                        name: 'ada'
-                    },
-                    {
-                        url: '',
-                        name: '2',
-                    },
-                    {
-                        url: '',
-                        name: '3'
-                    },
-                    {
-                        url: '',
-                        name: '1'
-                    },
-                    {
-                        url: '',
-                        name: '2',
-                    },
-                    {
-                        url: '',
-                        name: '3'
-                    }
-                ],
-
+                url: 'http://122.51.75.23:8081',
+                model:[],
                 page:{
                     totalSize: 0,//总条数
                     pageSize: 10,//每页显示的条目数
@@ -83,12 +58,44 @@
                 }
             };
         },
+        mounted(){
+            this.getList();
+        },
         methods:{
             pageChange(page){
                 this.page.currentPage = page.currentPage;
                 this.page.pageSize = page.pageSize;
                 console.log(this.page.currentPage)
+            },
+            getList(){
+                let that = this;
 
+                let loading = that.$loading.service({
+                    text: '正在加载',
+                    lock: true,
+                    target: document.querySelector('.view')
+                });
+
+                that.$axios.get(that.$api.gcodeInfo.getAllGcode, {
+                    params: {
+                        currentPage: this.page.currentPage,
+                        pageSize: this.page.pageSize,
+                        query: {}
+                    }
+                }).then(res => {
+                    console.log(res);
+                    setTimeout(function () {
+                        loading.close();
+                        if (res.code === 200) {
+                            that.page.totalSize = res.data[1][0];
+                            that.model = res.data[0];
+                        }
+                    },500)
+
+                }).catch(res => {
+                    loading.close();
+                    console.log(res);
+                })
             }
         },
     }
@@ -98,26 +105,31 @@
   .main{
     width: 100%;
     height: 100%;
-    /*background: #f5f5f5;*/
-
-    background-position: center center;
-    background-size: cover;
-    background-image: linear-gradient(to bottom,#ffffff,#050827);
+    background: #f2f2f2;
+    overflow-y: scroll;
     .body{
-      margin-top: 140px;
+      margin-top: 150px;
+      margin-bottom: 50px;
       display: flex;
       width: 70%;
       margin-left: 15%;
-      /*box-shadow: #dedede 1px 1px 2px;*/
       .view{
         background: #fff;
-        margin: 0 auto;
-        padding: 20px 10px;
+        margin-left: 20px;
+        padding: 15px 10px;
         width: 100%;
-        height: 100%;
+        box-shadow: #b8bacc 0 2px 4px;
+        border-radius: 8px;
         .group{
           width: 100%;
+          min-height: 400px;
           padding: 0 8px;
+          .txt{
+            padding: 5px 14px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+          }
           .el-card{
             margin: 8px 0;
           }

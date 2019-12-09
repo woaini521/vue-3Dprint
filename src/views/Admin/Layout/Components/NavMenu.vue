@@ -6,7 +6,7 @@
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
-      background-color="#050827"
+      background-color="#292421"
       text-color="#fff"
       active-text-color="#409EFF">
       <el-menu-item index="/admin/index">

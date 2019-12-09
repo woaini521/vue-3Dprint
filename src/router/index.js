@@ -1,15 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import AdminIndex from '../views/Admin/Layout/Index';
-import UserIndex from '../views/User/Layout/Index';
-import Home from '../views/Admin/Home/Index';
-import Login from "../views/Admin/Login/Index";
-import UserInfo from "../views/Admin/UserManage/UserInfo/Index";
-import GcodeType from "../views/Admin/GcodeManage/GcodeType/Index";
-import GcodesUpload from "../views/Admin/GcodeManage/GcodesUpload/Index";
-import GcodeManagement from "../views/Admin/GcodeManage/GcodeManage/Index";
-import GcodeUpload from "../views/Admin/GcodeManage/GcodeUpload/Index";
-import GcodePic from '../views/Admin/GcodeManage/GcodePic/index';
 
 Vue.use(Router);
 
@@ -31,7 +21,7 @@ export default new Router({
     {
       path: '/index',
       name: '用户首页',
-      component: UserIndex,
+      component: () => import('../views/UI/Layout'),
       meta: {
         requireAuth: false
       }
@@ -39,7 +29,7 @@ export default new Router({
     {
       path: '/adminLogin',
       name: '管理员登录',
-      component: Login,
+      component: () => import('../views/Admin/Login'),
       meta: {
         requireAuth: false
       }
@@ -54,7 +44,7 @@ export default new Router({
     },
     {
       path: '/admin',
-      component: AdminIndex,
+      component: () => import('../views/Admin/Layout'),
       meta: {
         requireAuth: true,
         requireAdminAuth: true
@@ -63,7 +53,7 @@ export default new Router({
         {
           path: '/admin/index',
           name: '后台首页',
-          component: Home,
+          component: () => import('../views/Admin/Home'),
           meta: {
             requireAuth: true,
             requireAdminAuth: true
@@ -72,7 +62,7 @@ export default new Router({
         {
           path: '/admin/userInfo',
           name: '用户信息',
-          component: UserInfo,
+          component: () => import('../views/Admin/UserManage/UserInfo'),
           meta: {
             requireAuth: true,
             requireAdminAuth: true
@@ -81,7 +71,7 @@ export default new Router({
         {
           path: '/admin/gcodeType',
           name: '添加类型',
-          component: GcodeType,
+          component: () => import('../views/Admin/GcodeManage/GcodeType'),
           meta: {
             requireAuth: true,
             requireAdminAuth: true
@@ -90,7 +80,7 @@ export default new Router({
         {
           path: '/admin/gcodeManage',
           name: '产品管理',
-          component: GcodeManagement,
+          component: () => import('../views/Admin/GcodeManage/GcodeManage'),
           meta: {
             requireAuth: true,
             requireAdminAuth: true
@@ -99,7 +89,7 @@ export default new Router({
         {
           path: '/admin/gcodeUpload',
           name: '上传文件',
-          component: GcodeUpload,
+          component: () => import('../views/Admin/GcodeManage/GcodeUpload'),
           meta: {
             requireAuth: true,
             requireAdminAuth: true
@@ -108,7 +98,7 @@ export default new Router({
         {
           path: '/admin/gcodesUpload',
           name: '批量上传',
-          component: GcodesUpload,
+          component: () => import('../views/Admin/GcodeManage/GcodesUpload'),
           meta: {
             requireAuth: true,
             requireAdminAuth: true
@@ -117,7 +107,7 @@ export default new Router({
         {
           path: '/admin/gcodePic',
           name: '修改默认封面',
-          component: GcodePic,
+          component: () => import('../views/Admin/GcodeManage/GcodePic'),
           meta: {
             requireAuth: true,
             requireAdminAuth: true
@@ -128,7 +118,7 @@ export default new Router({
     {
       path: '/userCenter',
       name: '用户中心',
-      component: ()=>import('../views/User/UserCenter/Index'),
+      component: ()=>import('../views/UI/UserCenter'),
       meta: {
         requireAuth: true
       },
@@ -136,7 +126,7 @@ export default new Router({
         {
           path: '/userCenter/userInfo',
           name: '用户信息',
-          component: ()=>import('../views/User/UserInfo/Index'),
+          component: ()=>import('../views/UI/UserInfo'),
           meta: {
             requireAuth: true
           }
@@ -144,7 +134,7 @@ export default new Router({
         {
           path: '/userCenter/updatePwd',
           name: '修改密码',
-          component: ()=>import('../views/User/UpdatePwd/Index'),
+          component: ()=>import('../views/UI/UpdatePwd'),
           meta: {
             requireAuth: true
           }
@@ -154,10 +144,16 @@ export default new Router({
     {
       path: '/gcodeCenter',
       name: '资源模型',
-      component: ()=>import('../views/User/GcodeCenter/Index'),
-      meta: {
-        requireAuth: false
-      }
+      component: ()=>import('../views/UI/GcodeCenter')
+    },
+    {
+      path: '/404',
+      name: '404',
+      component: ()=>import('../views/404.vue')
+    },
+    {
+      path: '*',
+      redirect: '/404'
     }
   ]
 })

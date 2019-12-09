@@ -11,10 +11,7 @@
       <div class="table">
         <el-table
           :data="tableData"
-          height="675px"
-          header-row-style="height:75px"
-          row-style="height: 60px"
-          style="width: 100%"
+          max-height="675px"
           fit
           highlight-current-row
           stripe
@@ -38,7 +35,7 @@
               v-else-if="key === 'operate'"
               :key="key"
               :label="item.label"
-              width="200"
+              width="auto"
               align="center"
               show-overflow-tooltip>
               <template slot-scope="scope">
@@ -298,9 +295,9 @@
                 let that = this;
                 let loading = that.$loading.service({
                     text: '正在加载',
-                    spinner: "el-icon-loading",
+                    // spinner: "el-icon-loading",
                     lock: true,
-                    target: document.querySelector('.table')
+                    target: document.querySelector('.el-table')
                 });
                 that.$axios.get(that.$api.gcodeType.getAllType, {
                     params: {
@@ -326,9 +323,8 @@
 
 <style lang="scss" scoped>
   .body {
-    width: 100%;
-    height: 100%;
-
+    width: 95%;
+    margin: 0 auto;
     .search {
       display: flex;
 
@@ -338,10 +334,16 @@
     }
 
     .table {
-      margin-top: 10px;
+      margin: 10px 0;
       padding-bottom: 20px;
       background: #fff;
-
+      border-radius: 8px;
+      box-shadow: #b8bacc 0px 2px 4px;
+      .el-table{
+        width: 100%;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
       .pagination {
         display: flex;
         justify-content: center;

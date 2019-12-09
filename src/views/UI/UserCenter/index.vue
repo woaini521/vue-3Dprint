@@ -18,7 +18,7 @@
 
 <script>
     import Head from "../Layout/Components/Head";
-    import NavMenu from "../../User/UserCenter/Components/NavMenu";
+    import NavMenu from "../UserCenter/Components/NavMenu";
     export default {
         name: "UserCenter",
         components: {NavMenu,  Head}

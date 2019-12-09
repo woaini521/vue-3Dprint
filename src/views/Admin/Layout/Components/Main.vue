@@ -89,17 +89,18 @@
     width: 100%;
     height: 100%;
     .el-tabs {
-      /*background: #f5f5f5 !important;*/
-      background-image: linear-gradient(to bottom right,#f5f5f5,#dedede,#050827);
+      background: #f2f2f2;
+      /*background-image: linear-gradient(to bottom right,#f5f5f5,#dedede,#050827);*/
       width: 100%;
       height: 100%;
       margin: 0;
       padding: 0;
-      overflow: auto;
+      overflow: scroll;
       .scroll_view{
         width: calc(100% - 5px);
         height: calc(100% - 5px);
         margin: auto;
+        overflow: scroll;
       }
     }
   }

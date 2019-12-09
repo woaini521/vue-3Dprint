@@ -5,12 +5,8 @@
 </template>
 
 <script>
-import UserIndex from "./views/User/Layout/Index";
 export default {
-
-    name: 'App',
-    components: {UserIndex},
-
+    name: 'App'
 }
 </script>
 

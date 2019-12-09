@@ -11,7 +11,7 @@
             <el-input type="password" v-model="adminForm.password" autocomplete="off" placeholder="请输入密码" show-password class="input"></el-input>
           </el-form-item>
         </el-form>
-        <button type="button" @click="adminLogin('adminForm')">登录</button>
+        <el-button :loading="loading" type="button" @click="adminLogin('adminForm')">登录</el-button>
       </div>
     </div>
   </div>
@@ -22,6 +22,7 @@
         name: "Login",
         data(){
             return{
+                loading: false,
                 //登录表单
                 adminForm:{
                   username: 'admin',
@@ -29,8 +30,8 @@
                 },
                 imgurl: require('../../../static/background/Admin/Login/adminLoginBackPic.jpg'),
                 options:{
-                    text: '正在加载',
-                    spinner: "el-icon-loading",
+                    text: '正在登录',
+                    // spinner: "el-icon-loading",
                     lock: true,
                     background: "rgba(0, 0, 0, 0.8)"
                 },
@@ -49,26 +50,34 @@
             //管理员登录
             adminLogin(adminForm){
                 let that = this;
+                this.loading = true;
                 that.$refs[adminForm].validate((valid) => {
                     if(valid){
-                        let loading = that.$loading.service(that.options);
+                        //let loading = that.$loading.service(that.options);
                         let password = that.$aes.encrypt(that.adminForm.password);
 
-                        that.$axios.post(that.$api.admin.login,{
+                        that.$axios.post(that.$api.adminInfo.login,{
                             username: that.adminForm.username,
                             password: password
                         }).then(res => {
-
-                            setTimeout(function () {
-                                loading.close();
-                                if(res.code === 200){
-                                    //登录成功,设置cookie
-                                    that.$store.commit("saveAdminToken",{"adminName":that.adminForm.username,"adminToken":that.adminForm.username});
-                                    that.$router.replace({path:'/admin/index'});
-                                }
-                            },500);
+                            that.loading = false;
+                            if(res.data.code === 200){
+                                //登录成功,设置cookie
+                                that.$store.commit("saveAdminToken",{"adminName":that.adminForm.username,"adminToken":res.headers['authorization']});
+                                that.$router.replace({path:'/admin/index'});
+                            }
+                            // setTimeout(function () {
+                            //     //loading.close();
+                            //     that.loading = false;
+                            //     if(res.data.code === 200){
+                            //         //登录成功,设置cookie
+                            //         that.$store.commit("saveAdminToken",{"adminName":that.adminForm.username,"adminToken":that.adminForm.username});
+                            //         that.$router.replace({path:'/admin/index'});
+                            //     }
+                            // },500);
                         }).catch(res =>{
-                            loading.close();
+                            that.loading = false;
+                            //loading.close();
                             console.log(res)
                         })
                     }
@@ -123,7 +132,7 @@
   }
 </style>
 
-<style scoped>
+<style lang="scss" scoped>
   #Login{
     background-image: url('~@/static/background/Admin/Login/adminLoginBackPic.jpg');
     background-size: cover;
@@ -199,7 +208,7 @@
   /*    0 2px 7px 0 rgba(0,0,0,.2);*/
   /*}*/
 
-  button {
+  .el-button {
     cursor: pointer;
     width: 350px;
     height: 44px;
@@ -228,59 +237,30 @@
     -moz-transition: all .2s;
     -webkit-transition: all .2s;
     -ms-transition: all .2s;
+    &:hover {
+      -moz-box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+      -webkit-box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+      box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+    }
+    &:active {
+      -moz-box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+      -webkit-box-shadow:
+        0 15px 30px 0 rgba(255,255,255,.15) inset,
+        0 2px 7px 0 rgba(0,0,0,.2);
+      box-shadow:
+        0 5px 8px 0 rgba(0,0,0,.1) inset,
+        0 1px 4px 0 rgba(0,0,0,.1);
+
+      border: 0px solid #ef4300;
+    }
   }
 
-  button:hover {
-    -moz-box-shadow:
-      0 15px 30px 0 rgba(255,255,255,.15) inset,
-      0 2px 7px 0 rgba(0,0,0,.2);
-    -webkit-box-shadow:
-      0 15px 30px 0 rgba(255,255,255,.15) inset,
-      0 2px 7px 0 rgba(0,0,0,.2);
-    box-shadow:
-      0 15px 30px 0 rgba(255,255,255,.15) inset,
-      0 2px 7px 0 rgba(0,0,0,.2);
-  }
-
-  button:active {
-    -moz-box-shadow:
-      0 15px 30px 0 rgba(255,255,255,.15) inset,
-      0 2px 7px 0 rgba(0,0,0,.2);
-    -webkit-box-shadow:
-      0 15px 30px 0 rgba(255,255,255,.15) inset,
-      0 2px 7px 0 rgba(0,0,0,.2);
-    box-shadow:
-      0 5px 8px 0 rgba(0,0,0,.1) inset,
-      0 1px 4px 0 rgba(0,0,0,.1);
-
-    border: 0px solid #ef4300;
-  }
-
-  .error {
-    display: none;
-    position: absolute;
-    top: 27px;
-    right: -55px;
-    width: 40px;
-    height: 40px;
-    background: #2d2d2d; /* browsers that don't support rgba */
-    background: rgba(45,45,45,.25);
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-  }
-
-  .error span {
-    display: inline-block;
-    margin-left: 2px;
-    font-size: 40px;
-    font-weight: 700;
-    line-height: 40px;
-    text-shadow: 0 1px 2px rgba(0,0,0,.1);
-    -o-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-
-  }
 </style>
