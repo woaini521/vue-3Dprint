@@ -2,31 +2,35 @@
   <div class="main">
     <Head></Head>
     <div style="margin-top: 60px">
-      <TopNavMenu></TopNavMenu>
+      <TopNavMenu @changeId="changeId"></TopNavMenu>
     </div>
     <div class="body">
       <div>
-        <NavMenu></NavMenu>
+        <NavMenu @changeUser="changeUser" @changeStatus="changeStatus"></NavMenu>
       </div>
       <div class="view">
-        <div class="group">
+
+        <div v-if="totalSize !== 0" class="group">
           <el-row :gutter="15" style="width: 100%">
             <el-col :span="6" v-for="item in model" :key="o">
-              <el-card :body-style="{ padding: '0px'}" shadow="never">
+              <el-card :body-style="{ padding: '0px'}" shadow="always">
                 <img :src="url + item.homePic" class="image">
                 <div class="txt">
                   {{item.gcodeName}}
-                  <div style="color: #b8bacc;font-size: 12px;">&emsp;{{item.statusId}}</div>
-                  <el-button type="text" class="button">下载</el-button>
+                  <div style="color: #b8bacc;font-size: 12px;">&emsp;({{item.typeName}})</div>
+                  <el-button type="text" class="button" @click="handleDownload(item.gcodePath)">下载</el-button>
                 </div>
               </el-card>
             </el-col>
           </el-row>
         </div>
+        <div v-else class="group no_model">
+          暂无模型~~
+        </div>
 
         <div class="pagination">
           <Pagination
-            :total="page.totalSize"
+            :total="totalSize"
             @pageChange="pageChange"></Pagination>
         </div>
 
@@ -49,23 +53,26 @@
         components: {NavMenu, Head, TopNavMenu, Pagination},
         data(){
             return{
-                url: 'http://122.51.75.23:8081',
+                url: this.$store.state.httpUrl,
                 model:[],
-                page:{
-                    totalSize: 0,//总条数
-                    pageSize: 10,//每页显示的条目数
-                    currentPage: 1 //当前页
+                totalSize: 0,//总条数
+                pageQuery: {
+                    page:{
+                        size: 10,//每页显示的条目数
+                        current: 1 //当前页
+                    },
+                    query:{}
                 }
+
             };
         },
         mounted(){
-            this.getList();
+            //this.getList();
         },
         methods:{
             pageChange(page){
-                this.page.currentPage = page.currentPage;
-                this.page.pageSize = page.pageSize;
-                console.log(this.page.currentPage)
+                this.pageQuery.current= page.currentPage;
+                this.pageQuery.size = page.pageSize;
             },
             getList(){
                 let that = this;
@@ -76,26 +83,34 @@
                     target: document.querySelector('.view')
                 });
 
-                that.$axios.get(that.$api.gcodeInfo.getAllGcode, {
-                    params: {
-                        currentPage: this.page.currentPage,
-                        pageSize: this.page.pageSize,
-                        query: {}
-                    }
-                }).then(res => {
-                    console.log(res);
+                that.$axios.post(that.$api.gcodeInfo.getAllGcode,
+                    that.pageQuery
+                ).then(res => {
                     setTimeout(function () {
                         loading.close();
-                        if (res.code === 200) {
-                            that.page.totalSize = res.data[1][0];
-                            that.model = res.data[0];
+                        if (res) {
+                            that.totalSize = res.data.data.total;
+                            that.model = res.data.data.records;
                         }
                     },500)
 
                 }).catch(res => {
                     loading.close();
-                    console.log(res);
                 })
+            },
+            handleDownload(path){
+                window.open(this.url + path, "_parent");
+            },
+            changeId(val){
+                this.pageQuery.query["typeId"] = val;
+                this.getList();
+            },
+            changeUser(val){
+                this.pageQuery.query["userName"] = val;
+                this.getList();
+            },
+            changeStatus(){
+                this.pageQuery.query["statusId"] = 0;
             }
         },
     }
@@ -143,6 +158,13 @@
             margin-right: 0;
             margin-left: auto;
           }
+        }
+        .no_model{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          color: #bcbec2;
         }
         .pagination {
           display: flex;

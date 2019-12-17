@@ -1,8 +1,7 @@
 <template>
 <!--  050827-->
   <el-menu
-    router="true"
-    :default-active="this.$route.path"
+    default-active="1"
     :collapse="isCollapse"
     class="el-menu-vertical-demo"
     @open="handleOpen"
@@ -10,13 +9,13 @@
     background-color="#292421"
     text-color="#fff"
     active-text-color="#409EFF">
-    <template v-if="this.$store.state.user.userToken || this.$store.state.admin.adminToken">
-      <el-menu-item index="">
+    <template v-if="this.$store.state.TOKEN.token">
+      <el-menu-item index="1" @click="changeUser($store.state.TOKEN.name)">
         <i class="el-icon-upload"></i>
         <span slot="title">我的上传</span>
       </el-menu-item>
     </template>
-    <el-menu-item index="">
+    <el-menu-item index="2" @click="changeUser(null)">
       <i class="el-icon-upload"></i>
       <span slot="title">全部模型</span>
     </el-menu-item>
@@ -32,26 +31,31 @@
                 isCollapse: false
             };
         },
+        mounted(){
+            this.changeUser(this.$store.state.TOKEN.name);
+        },
         methods: {
             changeCollapse() {
                 this.isCollapse !== true ? this.isCollapse = true : this.isCollapse = false
+            },
+            changeUser(user){
+                this.$emit("changeUser",user);
             }
         }
+
     }
 </script>
 
 <style lang="scss" scoped>
 
   .el-menu-vertical-demo {
-    /*height: 100%;*/
-    min-height: 300px;
+    /*min-height: 300px;*/
     width: 200px;
     text-align: left;
     box-shadow: #b8bacc 0 2px 4px;
   }
 
   .el-menu-vertical-demo:not(.el-menu--collapse) {
-    /*height: 100%;*/
     width: 200px;
     text-align: left;
   }

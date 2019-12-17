@@ -34,7 +34,11 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$store.commit("clearAdminToken");
+                    this.$store.commit("clearName");
+                    this.$store.commit("clearNickName");
+                    this.$store.commit("clearIdentity");
+                    this.$store.commit("clearToken");
+
                     this.$store.commit("clearTab");
                     this.$message.success("注销成功");
                     this.$router.replace('/index');

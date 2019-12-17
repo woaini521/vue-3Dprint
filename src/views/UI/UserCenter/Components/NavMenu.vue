@@ -6,7 +6,7 @@
     class="el-menu-vertical-demo"
     @open="handleOpen"
     @close="handleClose"
-    background-color="#050827"
+    background-color="#292421"
     text-color="#fff"
     active-text-color="#409EFF">
     <el-submenu index="1" >
@@ -39,12 +39,11 @@
 
 <style scoped>
   .el-menu-vertical-demo{
-    height: 100%;
     width: 200px;
     text-align: left;
+    box-shadow: #b8bacc 0 2px 4px;
   }
   .el-menu-vertical-demo:not(.el-menu--collapse) {
-    height: 100%;
     width: 200px;
     text-align: left;
   }

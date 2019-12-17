@@ -8,7 +8,7 @@
       </div>
       <div class="line">
         <div class="label">账号&emsp;&emsp;</div>
-        <div class="value">{{this.$store.state.user.userName}}</div>
+        <div class="value">{{this.$store.state.TOKEN.name}}</div>
       </div>
       <div class="line">
         <div class="label">昵称&emsp;&emsp;</div>
@@ -53,7 +53,7 @@
     width: 100%;
     height: 100%;
     background: #fff;
-
+    border-radius: 8px;
     .body{
       width: 100%;
       display: flex;

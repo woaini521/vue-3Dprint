@@ -56,28 +56,23 @@
                         //let loading = that.$loading.service(that.options);
                         let password = that.$aes.encrypt(that.adminForm.password);
 
-                        that.$axios.post(that.$api.adminInfo.login,{
+                        that.$axios.post(that.$api.login,{
                             username: that.adminForm.username,
                             password: password
                         }).then(res => {
                             that.loading = false;
+                            console.log(res)
                             if(res.data.code === 200){
                                 //登录成功,设置cookie
-                                that.$store.commit("saveAdminToken",{"adminName":that.adminForm.username,"adminToken":res.headers['authorization']});
+                                that.$store.commit("saveName",that.adminForm.username);
+                                that.$store.commit("saveNickName",res.data.data.nickName);
+                                that.$store.commit("saveIdentity",res.data.data.roleId);
                                 that.$router.replace({path:'/admin/index'});
                             }
-                            // setTimeout(function () {
-                            //     //loading.close();
-                            //     that.loading = false;
-                            //     if(res.data.code === 200){
-                            //         //登录成功,设置cookie
-                            //         that.$store.commit("saveAdminToken",{"adminName":that.adminForm.username,"adminToken":that.adminForm.username});
-                            //         that.$router.replace({path:'/admin/index'});
-                            //     }
-                            // },500);
                         }).catch(res =>{
                             that.loading = false;
                             //loading.close();
+
                             console.log(res)
                         })
                     }

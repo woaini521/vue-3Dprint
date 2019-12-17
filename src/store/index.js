@@ -8,10 +8,10 @@ export default new Vuex.Store({
   state:{
     //登录状态管理
     TOKEN:{
-      userName: Cookie.get("userName"),
-      userToken: Cookie.get("userToken"),
-      adminName: Cookie.get("adminName"),
-      adminToken: Cookie.get("adminToken")
+      name: Cookie.get("name"),
+      nickName: Cookie.get("nickName"),
+      token: Cookie.get("token"),
+      identity: Cookie.get("identity")
     },
     //加载
     loading:{
@@ -21,32 +21,40 @@ export default new Vuex.Store({
     //tabs标签管理
     openTab:[],//所有打开的路由
     activeIndex: '/admin/index', //激活的页面路由
-    imgUrl: 'http://localhost:8081',
+    httpUrl: 'http://localhost:8081',
   },
   mutations:{
-    saveUserToken(state,userToken){
-      state.TOKEN.userName = userToken.userName;
-      state.TOKEN.userToken = userToken.userToken;
-      Cookie.set("userName",userToken.userName);
-      Cookie.set("userToken",userToken.userToken);
+    saveName(state,name){
+      state.TOKEN.name = name;
+      Cookie.set("name",name);
     },
-    clearUserToken(state){
-      state.TOKEN.userName = null;
-      state.TOKEN.userToken = null;
-      Cookie.remove("userName");
-      Cookie.remove("userToken");
+    saveNickName(state,nickName){
+      state.TOKEN.nickName = nickName;
+      Cookie.set("nickName",nickName);
     },
-    saveAdminToken(state,userToken){
-      state.TOKEN.adminName = userToken.adminName;
-      state.TOKEN.adminToken = userToken.adminToken;
-      Cookie.set("adminName",userToken.adminName);
-      Cookie.set("adminToken",userToken.adminToken);
+    saveToken(state,token){
+      state.TOKEN.token = token;
+      Cookie.set("token",token);
     },
-    clearAdminToken(state){
-      state.TOKEN.adminName = null;
-      state.TOKEN.adminToken = null;
-      Cookie.remove("adminName");
-      Cookie.remove("adminToken");
+    saveIdentity(state,identity){
+      state.TOKEN.identity = identity;
+      Cookie.set("identity",identity);
+    },
+    clearName(state){
+      state.TOKEN.name = null;
+      Cookie.remove("name");
+    },
+    clearNickName(state){
+      state.TOKEN.nickName = null;
+      Cookie.remove("nickName");
+    },
+    clearToken(state){
+      state.TOKEN.token = null;
+      Cookie.remove("token");
+    },
+    clearIdentity(state){
+      state.TOKEN.identity = null;
+      Cookie.remove("identity");
     },
     //添加tab页
     addTab(state,data){

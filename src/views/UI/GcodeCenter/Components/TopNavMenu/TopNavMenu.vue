@@ -1,9 +1,8 @@
 <template>
   <div class="TopNavMenu">
     <div class="main">
-      <div v-for="item in items" :key="item">
-        <div class="TopNavMenu_main_text">{{item.typeName}}</div>
-      </div>
+      <div class="TopNavMenu_main_text" :class="{'active-class':current === 4}" @click="handleClick(null,4)">全部</div>
+      <div v-for="(item,index) in items" :key="index" class="TopNavMenu_main_text" :class="{'active-class':current === index}" @click="handleClick(item.typeId,index)">{{item.typeName}}</div>
     </div>
     <div class="TopNavMenu_search">
       <div>
@@ -28,7 +27,8 @@
         name: "TopNavMenu",
         data(){
             return{
-                items: ['日用品','玩具','艺术品','动漫周边']
+                items: [],
+                current: 4
             };
         },
         created(){
@@ -42,13 +42,16 @@
                 let that = this;
                 that.$axios.get(that.$api.gcodeType.getItems)
                     .then(res => {
-                        console.log(res)
-                        if(res.code === 200){
-                            that.items = res.data
+                        if(res){
+                            that.items = res.data.data
                         }
                     }).catch(res => {
 
                 })
+            },
+            handleClick(typeId,index){
+                this.current = index;
+                this.$emit("changeId",typeId);
             }
         }
     }
@@ -76,13 +79,12 @@
         font-weight: bold;
         color: #111;
         cursor: pointer;
-        &:hover{
-          /*color: white;*/
-          cursor: pointer;
-        }
       }
-
+      .active-class{
+        color: #36a3f7;
+      }
     }
+
     .TopNavMenu_search{
       height: 100%;
       margin-right: 20%;

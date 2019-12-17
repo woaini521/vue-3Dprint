@@ -15,26 +15,26 @@
 
             <div class="text">
 
-              <template v-if="this.$store.state.TOKEN.userToken">
+              <template v-if="this.$store.state.TOKEN.identity === '1'">
                 <el-dropdown @command="">
                   <span class="el-dropdown-link">
-                    {{this.$store.state.TOKEN.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{this.$store.state.TOKEN.nickName}}<i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="usercenter" @click.native="toUserCenter">个人中心</el-dropdown-item>
-                    <el-dropdown-item command="logout" @click.native="userLogout">注销</el-dropdown-item>
+                    <el-dropdown-item command="logout" @click.native="Logout">注销</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </template>
 
-              <template v-else-if="this.$store.state.TOKEN.adminToken">
+              <template v-else-if="this.$store.state.TOKEN.identity === '0'">
                 <el-dropdown @command="">
                   <span class="el-dropdown-link">
-                    {{this.$store.state.TOKEN.adminName}}<i class="el-icon-arrow-down el-icon--right"></i>
+                    管理员<i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="usercenter" @click.native="toAdminIndex">后台管理</el-dropdown-item>
-                    <el-dropdown-item command="logout" @click.native="adminLogout">注销</el-dropdown-item>
+                    <el-dropdown-item command="logout" @click.native="Logout">注销</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </template>
@@ -131,7 +131,7 @@
                 //登录表单
                 loginForm: {
                     username: 'test',
-                    password: '123'
+                    password: '123456'
                 },
                 // 注册表单
                 registerForm: {
@@ -181,63 +181,46 @@
                 that.$refs[loginForm].validate((valid) =>{
                     if(valid){
                         that.loading = true;
-                        // let loading = that.$loading.service({
-                        //     text: '正在登录',
-                        //     lock: true,
-                        //     background: "rgba(0, 0, 0, 0.8)"
-                        // });
-
                         let password = that.$aes.encrypt(that.loginForm.password);
-                        that.$axios.post(that.$api.userInfo.login,{
+                        that.$axios.post(that.$api.login,{
                             username: that.loginForm.username,
                             password: password
                         }).then(res => {
-                            console.log(res);
                             setTimeout(function () {
-                                // loading.close();
                                 that.loading = false;
-                                if(res.data.code === 200){
+                                if(res){
+                                    that.$message.success("登录成功");
                                     //登录成功，设置cookie
-                                    that.$store.commit("saveUserToken",{"userName":that.loginForm.username,"userToken":res.headers['authorization']});
+                                    that.$store.commit("saveName",that.loginForm.username);
+                                    that.$store.commit('saveNickName',res.data.data.nickName);
+                                    that.$store.commit("saveIdentity",res.data.data.roleId);
                                 }
                                 //初始化表单
                                 that.resetLoginForm(loginForm)
                             },500);
                         }).catch(res =>{
-                            // loading.close();
-                            console.log(res)
                             that.loading = false
                         })
                     }
                 });
 
             },
-            //用户注销
-            userLogout(){
+            //注销
+            Logout(){
               this.$messageBox.confirm("是否注销？","确认",{
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
               }).then(() => {
-                  this.$store.commit("clearUserToken");
+                  this.$store.commit("clearToken");
+                  this.$store.commit("clearName");
+                  this.$store.commit("clearNickName");
+                  this.$store.commit("clearIdentity");
                   this.$message.success("注销成功");
                   this.$router.replace('/index');
               }).catch(() => {
 
               })
-            },
-            //管理员注销
-            adminLogout(){
-                this.$messageBox.confirm("是否注销？","确认",{
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$store.commit("clearAdminToken");
-                    this.$message.success("注销成功");
-                }).catch(() => {
-
-                })
             },
             //注册
             register(registerForm){
@@ -245,30 +228,21 @@
                 that.$refs[registerForm].validate((valid) =>{
                     if(valid){
                         that.loading = true;
-                        // let loading = that.$loading.service({
-                        //     text: '正在加载',
-                        //     lock: true,
-                        //     background: "rgba(0, 0, 0, 0.8)"
-                        // });
-
                         let password = that.$aes.encrypt(that.registerForm.pwd);
-                        that.$axios.post(that.$api.userInfo.register,{
-                            username: that.registerForm.username,
-                            nickname: that.registerForm.nickname,
+                        that.$axios.post(that.$api.register,{
+                            userName: that.registerForm.username,
+                            nickName: that.registerForm.nickname,
                             password: password
                         }).then(res => {
-                            // console.log(res);
                             that.loading = false;
                             setTimeout(function () {
-                                loading.close();
-                                if(res.code === 200){
+                                if(res){
                                     //初始化表单
-                                    that.resetRegisterForm(registerForm)
+                                    that.$message.success("注册成功");
+                                    that.resetRegisterForm(registerForm);
                                 }
                             },500);
                         }).catch(res =>{
-                            // loading.close();
-                            console.log(res)
                             that.loading = false;
                         })
                     }

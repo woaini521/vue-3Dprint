@@ -3,7 +3,7 @@
 
     <div class="carousel" id="carousel">
       <video muted="muted" height="600" width="100%" loop autoplay>
-        <source src="http://122.51.75.23:8081/video/first5s.mp4" type="video/mp4">
+        <source src="http://localhost:8081/video/first5s.mp4" type="video/mp4">
       </video>
       <div class="title">
         <div class="title_text1">3D PRINT</div>

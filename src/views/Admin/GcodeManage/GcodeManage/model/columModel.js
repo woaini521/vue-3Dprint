@@ -7,7 +7,7 @@ export default {
         'queryable': false,
         'defaultValue': '',
         'width': 'auto',
-        'visible': true
+        'visible': false
       },
       'gcodeName':{
         'type': 'string',
@@ -17,30 +17,54 @@ export default {
         'width': 'auto',
         'visible': true
       },
+      'gcodePath':{
+        'type': 'string',
+        'label': '模型路径',
+        'queryable': false,
+        'defaultValue': '',
+        'width': 'auto',
+        'visible': false
+      },
       'homePic':{
         'type': 'string',
-        'label': '缩略图',
+        'label': '预览图',
         'queryable': false,
         'defaultValue': '',
         'width': 'auto',
         'visible': true
       },
-      'username':{
+      'userName':{
         'type': 'string',
-        'label': '上传用户',
+        'label': '账号',
         'queryable': true,
+        'defaultValue': '',
+        'width': 'auto',
+        'visible': true
+      },
+      'nickName':{
+        'type': 'string',
+        'label': '昵称',
+        'queryable': false,
         'defaultValue': '',
         'width': 'auto',
         'visible': true
       },
       'typeName':{
         'type': 'string',
-        'label': '类型名称',
+        'label': '类型',
         'queryable': true,
         'defaultValue': '',
         'width': 'auto',
         'visible': true
       },
+      // 'statusName':{
+      //   'type': 'string',
+      //   'label': '状态',
+      //   'queryable': true,
+      //   'defaultValue': '',
+      //   'width': 'auto',
+      //   'visible': true
+      // },
       'createDate':{
         'type': 'date',
         'label': '创建日期',

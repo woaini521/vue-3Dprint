@@ -14,7 +14,8 @@
         fit
         highlight-current-row
         stripe
-        @select="handleSelectionChange">
+        @select="handleSelectionChange"
+        @select-all="handleSelectionChange">
         <el-table-column type="selection" width="50" align="center"/>
         <el-table-column type="index" width="50" align="center" label="序号"/>
         <template v-for="(item, key) in colums">
@@ -39,9 +40,9 @@
             fixed="right"
             show-overflow-tooltip>
             <template slot-scope="scope">
-              <el-button size="mini" type="default" @click="handleEdit(scope.$index, scope.row)">重置密码</el-button>
-              <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" type="default" @click="handleReset(scope.$index, scope.row.userId)">重置密码</el-button>
+              <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row.userId)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row.userId)">删除</el-button>
             </template>
           </el-table-column>
         </template>
@@ -49,9 +50,15 @@
 
       <div class="pagination">
         <Pagination
-          :total="page.totalSize"
+          :total="totalSize"
           @pageChange="pageChange"></Pagination>
       </div>
+      <EditPage
+        v-if="showEditPage"
+        :b-show.sync="showEditPage"
+        :user-id="userId"
+        @refresh="refresh"
+      ></EditPage>
     </div>
   </div>
 </template>
@@ -60,27 +67,32 @@
     import Pagination from '@/components/Pagination';
     import SearchView from '@/components/SearchView';
     import columModel from './model/columModel';
+    import EditPage from './edit';
 
     export default {
         name: "UserInfo",
-        components: {Pagination,SearchView},
+        components: {Pagination,SearchView,EditPage},
         data(){
             return {
                 //表格列
                 colums: columModel.new(),
-                //查询条件
-                query:{},
-                //表格选择
+
+                //多项选择
                 multipleSelection: [],
 
                 tableData: [],
                 // loading: true,
-
-                page:{
-                    totalSize: 0,//总条数
-                    pageSize: 10,//每页显示的条目数
-                    currentPage: 1 //当前页
-                }
+                totalSize: 0,//总条数
+                pageQuery: {
+                    page:{
+                        current: 1, //当前页
+                        size: 10//每页显示的条目数
+                    },
+                    //查询条件
+                    query:{},
+                },
+                showEditPage: false,
+                userId: ''
             };
         },
        mounted(){
@@ -88,43 +100,117 @@
         },
         methods:{
             search(model){
-                this.query = model;
+                this.pageQuery.query = model;
                 this.getAllUser();
             },
             getAllUser(){
                 let that = this;
                 let loading = that.$loading.service({
                     text: '正在加载',
-                    // spinner: "el-icon-loading",
                     lock: true,
                     target: document.querySelector('.el-table')
                 });
-                this.$axios.get(that.$api.userInfo.getList, {
-                    params: {
-                        currentPage: this.page.currentPage,
-                        pageSize: this.page.pageSize,
-                        query: this.query
+                this.$axios.post(that.$api.userInfo.getList,
+                    that.pageQuery
+                ).then(res => {
+                    loading.close();
+                    if (res) {
+                        that.totalSize = res.data.data.total;
+                        that.tableData = res.data.data.records;
                     }
-                }).then(res => {
-                    setTimeout(function () {
-                        loading.close();
-                        if (res.data.code === 200) {
-                            that.page.totalSize = res.data.data[1][0];
-                            that.tableData = res.data.data[0];
-                        }
-                    },500)
                 }).catch(res => {
                     loading.close();
-                    console.log(res);
+                })
+            },
+            //重置密码
+            handleReset(index,userId){
+              let that = this;
+              that.$messageBox.confirm("是否重置密码？重置后密码为:123456","确认",{
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+              }).then(() => {
+                  that.$axios.put(that.$api.userInfo.resetPassword, {
+                      userId: userId
+                  }).then(res => {
+                      if(res){
+                          that.$message.success("重置密码成功");
+                      }
+                      that.getAllUser();
+                  }).catch(res => {
+                  })
+              }).catch(() => {
+              })
+            },
+            //编辑
+            handleEdit(index,userId){
+                this.userId = userId;
+                this.showEditPage = true;
+            },
+            //删除
+            handleDelete(index,userId){
+                let that = this;
+                that.$messageBox.confirm("是否删除该用户？删除后无法恢复","确认",{
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    that.$axios.delete(that.$api.userInfo.delete, {
+                        params:{
+                            userId: userId
+                        }
+                    }).then(res => {
+                        if(res){
+                            that.$message.success("删除成功");
+                        }
+                        that.getAllUser();
+                    }).catch(res => {
+                    })
+                }).catch(() => {
+                })
+            },
+            //批量删除用户
+            doMulDelete(){
+                let that = this;
+                if (this.multipleSelection.length === 0) {
+                    this.$message.error("请选择一个或多个删除");
+                    return;
+                }
+                that.$messageBox.confirm("是否批量删除？","确认",{
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const array= [];
+                    that.multipleSelection.forEach((e) => {
+                        array.push(e.userId)
+                    });
+                    const userIds = array.join(',');
+                    that.$axios.delete(that.$api.userInfo.deleteMul,{
+                        params:{
+                            userIds: userIds
+                        }
+                    }).then(res => {
+                        if(res){
+                            that.$message.success("批量删除成功");
+                        }
+                        that.getAllUser()
+                    }).catch(res => {
+                    })
+                }).catch(() => {
+
                 })
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-                console.log(this.multipleSelection)
             },
+            //切换页面
             pageChange(page){
-                this.page.currentPage = page.currentPage;
-                this.page.pageSize = page.pageSize;
+                this.pageQuery.page.current= page.currentPage;
+                this.pageQuery.page.size = page.pageSize;
+                this.getAllUser();
+            },
+            refresh(){
                 this.getAllUser();
             }
         }

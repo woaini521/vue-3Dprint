@@ -115,13 +115,11 @@
                       :on-remove="handleRemove_file"
                       limit="1"
                       drag
-                      accept=".jpg"
+                      accept=".gcode"
                     >
                       <i class="el-icon-upload"></i>
                       <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                       <div class="el-upload__tip" slot="tip">*只能上传GCODE文件</div>
-                      <!--    <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
-                      <!--    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
                     </el-upload>
 
                   </el-form-item>
@@ -155,19 +153,19 @@
                     </div>
                   </el-form-item>
 
-                  <el-form-item label="" prop="status">
-                    <div class="line_style">
-                      <span class="label_style">*状态:&emsp;&emsp;</span>
-                      <el-select v-model="uploadForm.status" placeholder="请选择" style="width: 100%" size="small">
-                        <el-option
-                          v-for="item in options_status"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </div>
-                  </el-form-item>
+<!--                  <el-form-item label="" prop="statusId">-->
+<!--                    <div class="line_style">-->
+<!--                      <span class="label_style">*状态:&emsp;&emsp;</span>-->
+<!--                      <el-select v-model="uploadForm.statusId" placeholder="请选择" style="width: 100%" size="small">-->
+<!--                        <el-option-->
+<!--                          v-for="item in options_status"-->
+<!--                          :key="item.statusId"-->
+<!--                          :label="item.statusName"-->
+<!--                          :value="item.statusId">-->
+<!--                        </el-option>-->
+<!--                      </el-select>-->
+<!--                    </div>-->
+<!--                  </el-form-item>-->
 
                   <el-form-item label="" prop="intro">
                     <div class="line_style">
@@ -207,25 +205,33 @@
     export default {
         name: "GcodeUpload",
         data() {
+            const validate0 = (rule, value, callback) => {
+                if(!this.checkSpecialKey(value)){
+                    callback(new Error('不能使用特殊字符'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 uploadForm: {
                     fileName: '',
                     typeId: '',
-                    status: '',
+                    // statusId: '',
                     intro: ''
                 },
                 //将所有上传元素添加到同一个表单中
                 newForm: new FormData(),
                 rules: {
                     fileName: [
-                        {required: true, message: '*文件名不能为空', trigger: 'blur'}
+                        {required: true, message: '*文件名不能为空', trigger: 'blur'},
+                        {validator: validate0, trigger: 'blur'}
                     ],
                     typeId: [
                         {required: true, message: '*类别不能为空', trigger: 'blur'}
-                    ],
-                    status: [
-                        {required: true, message: '*请设置文件状态', trigger: 'blur'}
                     ]
+                    // statusId: [
+                    //     {required: true, message: '*请设置文件状态', trigger: 'blur'}
+                    // ]
                 },
                 action: '#',
 
@@ -234,33 +240,44 @@
                 //类型选择
                 options_type: [],
                 //状态
-                options_status: [{
-                    value: 0,
-                    label: '私密'
-                }, {
-                    value: 1,
-                    label: '公开'
-                }],
+                // options_status: [],
                 loading: false,
             };
         },
         mounted(){
-            this.getSelectItems();
+            this.getType();
         },
         methods: {
-            getSelectItems(){
+            // 特殊字符校验
+            checkSpecialKey(str) {
+                const specialKey = "[`~!#$^&*()=|{}':;'\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]‘' ";
+                for (let i = 0; i < str.length; i++) {
+                    if (specialKey.indexOf(str.substr(i, 1)) !== -1) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            getType(){
               let that = this;
               that.$axios.get(that.$api.gcodeType.getItems)
                   .then(res => {
-                      setTimeout(function () {
-                          if(res.code === 200){
-                              that.options_type = res.data
-                          }
-                      },500);
+                      if(res){
+                          that.options_type = res.data.data;
+                      }
                   }).catch(res => {
-
               })
             },
+            // getStatus(){
+            //     let that = this;
+            //     that.$axios.get(that.$api.gcodeStatus.getItems)
+            //         .then(res => {
+            //             if(res){
+            //                 that.options_status = res.data.data;
+            //             }
+            //         }).catch(res => {
+            //     })
+            // },
             //移除封面
             handleRemove_home(file) {
                 this.$refs.homePic.handleRemove(file);
@@ -294,11 +311,9 @@
             },
             newGcodeFile(file) {
                 this.newForm.append('gcodeFile', file.file);
-                return false;
             },
             submitUpload(form) {
                 let that = this;
-
 
                 this.$refs.homePic.submit();
                 this.$refs.prePic.submit();
@@ -308,39 +323,38 @@
                     this.$message.error("请选择文件");
                     return;
                 }else{
-
+                    let format = this.newForm.get("gcodeFile").name.replace(/.+\./, "");
+                    if(['gcode'].indexOf(format.toLowerCase()) === -1){
+                        this.$message.error("请上传正确的文件格式：gcode");
+                        return;
+                    }
                 }
 
                 if(this.newForm.get("homePic") == null){
                     this.$message.error("请选择封面");
                     return;
                 }else{
-                    var format = this.newForm.get("homePic").name.replace(/.+\./, "");
+                    let format = this.newForm.get("homePic").name.replace(/.+\./, "");
                     if(['jpg','jpeg','png','bmp'].indexOf(format.toLowerCase()) === -1){
-                        this.$message.error("请上传正确的封面格式：jpg、jpeg、png、bmp")
+                        this.$message.error("请上传正确的封面格式：jpg、jpeg、png、bmp");
                         return;
                     }
                 }
                 if(this.newForm.get("prePic") != null){
-                    var format2 = this.newForm.get("prePic").name.replace(/.+\./, "");
+                    let format2 = this.newForm.get("prePic").name.replace(/.+\./, "");
                     if(['jpg','jpeg','png','bmp'].indexOf(format2.toLowerCase()) === -1){
-                        this.$message.error("请上传正确的预览图格式：jpg、jpeg、png、bmp")
+                        this.$message.error("请上传正确的预览图格式：jpg、jpeg、png、bmp");
                         return;
                     }
                 }
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         that.loading = true;
-                        if(this.$store.state.user.userToken != null){
-                            this.newForm.append('username', this.$store.state.user.userName);
-                            this.newForm.append('identity', 1);
-                        }else{
-                            this.newForm.append('username', this.$store.state.admin.adminName);
-                            this.newForm.append('identity', 0);
-                        }
+
+                        this.newForm.append("userName",this.$store.state.TOKEN.name);
                         this.newForm.append('fileName', this.uploadForm.fileName);
                         this.newForm.append('typeId', this.uploadForm.typeId);
-                        this.newForm.append('statusId', this.uploadForm.status);
+                        // this.newForm.append('statusId', this.uploadForm.statusId);
                         this.newForm.append('intro', this.uploadForm.intro);
 
                         // let loading = this.$loading.service({
@@ -352,26 +366,21 @@
                         this.$axios.post(this.$api.gcodeInfo.upload,
                            this.newForm
                         ).then(res => {
+
                             setTimeout(function () {
                                 that.loading = false;
+                                if(res){
+                                    that.$message.success("上传成功");
+                                    that.$refs.homePic.clearFiles();
+                                    that.$refs.prePic.clearFiles();
+                                    that.$refs.gcodeFile.clearFiles();
 
-                                that.$refs.homePic.clearFiles();
-                                that.$refs.prePic.clearFiles();
-                                that.$refs.gcodeFile.clearFiles();
-
-                                that.$refs[form].resetFields();
-                                that.newForm = new FormData();
+                                    that.$refs[form].resetFields();
+                                    that.newForm = new FormData();
+                                }
                             },500);
                         }).catch(res => {
                             that.loading = false;
-
-                            that.$refs.homePic.clearFiles();
-                            that.$refs.prePic.clearFiles();
-                            that.$refs.gcodeFile.clearFiles();
-
-                            that.$refs[form].resetFields();
-                            that.newForm = new FormData();
-                            console.log(res);
                         });
 
                     }
@@ -475,7 +484,7 @@
     .label_style {
       width: 120px;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: normal;
       color: #050827;
     }
   }

@@ -26,7 +26,7 @@
           <el-menu-item index="/admin/gcodeType">添加类型</el-menu-item>
           <el-menu-item index="/admin/gcodeManage">产品管理</el-menu-item>
           <el-menu-item index="/admin/gcodeUpload">上传文件</el-menu-item>
-          <el-menu-item index="/admin/gcodesUpload">批量上传</el-menu-item>
+<!--          <el-menu-item index="/admin/gcodesUpload">批量上传</el-menu-item>-->
           <el-menu-item index="/admin/gcodePic">修改默认封面</el-menu-item>
         </el-menu-item-group>
       </el-submenu>

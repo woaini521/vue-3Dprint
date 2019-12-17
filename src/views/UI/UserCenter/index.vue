@@ -29,22 +29,19 @@
   .main{
     width: 100%;
     height: 100%;
-    /*background: #f5f5f5;*/
-    background-position: center center;
-    background-size: cover;
-    background-image: linear-gradient(to bottom,#ffffff,#050827);
+    background: #f2f2f2;
     .body{
       margin-top: 100px;
+      margin-bottom: 50px;
       display: flex;
       width: 70%;
       margin-left: 15%;
-      /*box-shadow: #dedede 1px 1px 2px;*/
       .view{
         background: #fff;
-        margin: 0 auto;
+        margin-left: 20px;
         width: 100%;
-        height: 100%;
-        /*box-shadow: #dedede 1px 1px 2px;*/
+        box-shadow: #b8bacc 0 2px 4px;
+        border-radius: 8px;
       }
     }
   }

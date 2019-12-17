@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from "../store";
+import {Message} from "element-ui";
 
 Vue.use(Router);
 
@@ -8,7 +10,7 @@ Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 };
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -95,15 +97,15 @@ export default new Router({
             requireAdminAuth: true
           }
         },
-        {
-          path: '/admin/gcodesUpload',
-          name: '批量上传',
-          component: () => import('../views/Admin/GcodeManage/GcodesUpload'),
-          meta: {
-            requireAuth: true,
-            requireAdminAuth: true
-          }
-        },
+        // {
+        //   path: '/admin/gcodesUpload',
+        //   name: '批量上传',
+        //   component: () => import('../views/Admin/GcodeManage/GcodesUpload'),
+        //   meta: {
+        //     requireAuth: true,
+        //     requireAdminAuth: true
+        //   }
+        // },
         {
           path: '/admin/gcodePic',
           name: '修改默认封面',
@@ -156,4 +158,39 @@ export default new Router({
       redirect: '/404'
     }
   ]
-})
+});
+
+//路由拦截器
+router.beforeEach((to,from,next) => {
+  if(to.meta.requireAdminAuth){
+    //需要管理员认证
+    if(store.state.TOKEN.token && store.state.TOKEN.identity === "0"){
+      next()
+    }else{
+      Message.error("请先登录再访问...");
+      setTimeout(function () {
+        next({
+          name: '管理员登录',
+          query: {redirect: to.fullPath}
+        })
+      },1000);
+    }
+  }else if(to.meta.requireAuth){
+    //需要认证
+    if(store.state.TOKEN.token && store.state.TOKEN.identity === "1"){
+      next()
+    }else{
+      Message.error("请先登录再访问...");
+      setTimeout(function () {
+        next({
+          name: '用户首页',
+          query: {redirect: to.fullPath}
+        },1000);
+      })
+    }
+  }else{
+    next()
+  }
+});
+
+export default router

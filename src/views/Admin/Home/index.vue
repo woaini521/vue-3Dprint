@@ -33,20 +33,24 @@
 
                 tableData: [
                     {
-                        key: 'Vue版本',
+                        key: 'Vue',
                         value: '2.5.2'
                     },
                     {
-                        key: 'SpringBoot版本',
+                        key: 'SpringBoot',
                         value: '2.1.0'
                     },
                     {
-                        key: 'MySQL版本',
+                        key: 'MySQL',
                         value: '5.7.26'
                     },
                     {
-                        key: 'Nginx版本',
+                        key: 'Nginx',
                         value: '1.16.0'
+                    },
+                    {
+                        key: 'Redis',
+                        value: '5.0.5'
                     },
                     {
                         key: '运行系统',

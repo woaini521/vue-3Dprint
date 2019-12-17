@@ -47,15 +47,21 @@
         </el-table>
         <div class="pagination">
           <Pagination
-            :total="page.totalSize"
+            :total="totalSize"
             @pageChange="pageChange"></Pagination>
         </div>
       </div>
     </div>
 <!--    添加类型-->
     <div class="dialog">
-      <el-dialog title="添加类型" :visible.sync="showAddTypeDialog" center :append-to-body="true" width="500px"
-                 :show-close="false">
+      <el-dialog
+        title="添加类型"
+        :visible.sync="showAddTypeDialog"
+        :close-on-click-modal="false"
+        center
+        :append-to-body="true"
+        width="500px"
+        :show-close="false">
         <el-form :model="addForm" :rules="addRules" ref="addForm" status-icon label-width="auto" label-position="left"
                  size="medium" style="width: 100%; display: flex; flex-direction: column;align-items: center">
           <div style="text-align: left">
@@ -72,8 +78,14 @@
     </div>
 <!--    编辑类型-->
     <div class="dialog">
-      <el-dialog title="编辑类型" :visible.sync="showEditTypeDialog" center :append-to-body="true" width="500px"
-                 :show-close="false">
+      <el-dialog
+        title="编辑类型"
+        :visible.sync="showEditTypeDialog"
+        :close-on-click-modal="false"
+        center
+        :append-to-body="true"
+        width="500px"
+        :show-close="false">
         <el-form :model="editForm" :rules="editRules" ref="editForm" status-icon label-width="auto" label-position="left"
                  size="medium" style="width: 100%; display: flex; flex-direction: column;align-items: center">
           <div style="text-align: left">
@@ -106,11 +118,17 @@
         },
         inject: ['reload'],
         data() {
+            const validate0 = (rule, value, callback) => {
+                if(!this.checkSpecialKey(value)){
+                    callback(new Error('不能使用特殊字符'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 //表格列
                 colums: columModel.new(),
-                //查询条件
-                query: {},
+
                 //表格选择
                 multipleSelection: [],
 
@@ -130,28 +148,47 @@
                 },
                 //数据表
                 tableData: [],
+
                 //分页
-                page: {
-                    totalSize: 0,//总条数
-                    pageSize: 10,//每页显示的条目数
-                    currentPage: 1 //当前页
+                totalSize: 0,//总条数
+
+                pageQuery: {
+                    page: {
+                        current: 1, //当前页
+                        size: 10//每页显示的条目数
+                    },
+                    //查询条件
+                    query: {},
                 },
+                //表单规则
                 addRules: {
                     typename: [
-                        {required: true, message: '类型名不能为空', trigger: 'blur'}
+                        {required: true, message: '类型名不能为空', trigger: 'blur'},
+                        {validator: validate0, trigger: 'blur'}
                     ],
                 },
                 editRules: {
                     typename: [
-                        {required: true, message: '类型名不能为空', trigger: 'blur'}
+                        {required: true, message: '类型名不能为空', trigger: 'blur'},
+                        {validator: validate0, trigger: 'blur'}
                     ],
                 }
             };
         },
         methods: {
+            // 特殊字符校验
+            checkSpecialKey(str) {
+                const specialKey = "[`~!#$^&*()=|{}':;'\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]‘' ";
+                for (let i = 0; i < str.length; i++) {
+                    if (specialKey.indexOf(str.substr(i, 1)) !== -1) {
+                        return false;
+                    }
+                }
+                return true;
+            },
             //点击搜索
             search(model) {
-                this.query = model;
+                this.pageQuery.query = model;
                 this.getAllType();
             },
             //展示添加对话框
@@ -160,15 +197,15 @@
             },
             //改变页数
             pageChange(page) {
-                this.page.currentPage = page.currentPage;
-                this.page.pageSize = page.pageSize;
+                this.pageQuery.page.current = page.currentPage;
+                this.pageQuery.page.size = page.pageSize;
                 this.getAllType();
             },
             // 重置表单
             resetForm(formName) {
-                this.$refs[formName].resetFields();
                 this.showAddTypeDialog = false;
                 this.showEditTypeDialog = false;
+                this.$refs[formName].resetFields();
             },
             //表格多选
             handleSelectionChange(val) {
@@ -191,15 +228,12 @@
                             that.$message.error("类型名已存在");
                         }else{
                             that.$axios.put(that.$api.gcodeType.updateType,{
-                                typeID: that.editForm.typeID,
+                                typeId: that.editForm.typeID,
                                 typeName: that.editForm.typename
                             }).then(res => {
-                                if(res.code === 200){
-                                    setTimeout(function () {
-                                        that.getAllType();
-                                    },500);
-                                }
+                                that.getAllType();
                             }).catch(res => {
+
                             });
                             that.resetForm(form);
                         }
@@ -207,29 +241,25 @@
                 });
             },
             //单个删除按钮
-            handleDelete(index, typeID) {
+            handleDelete(index, typeId) {
                 let that = this;
                 that.$messageBox.confirm("是否删除？", "确认", {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-
                     that.$axios.delete(that.$api.gcodeType.deleteType, {
                         params:{
-                            typeID: typeID
+                            typeId: typeId
                         }
                     }).then(res => {
-                        if (res.code === 200) {
-                            setTimeout(function () {
-                                that.getAllType()
-                            }, 500);
+                        if(res){
+                            that.$message.success("删除成功");
                         }
+                        that.getAllType();
                     }).catch(res => {
-                        console.log(res)
                     })
                 }).catch(() => {
-                    console.log(res)
                 })
             },
             //批量删除
@@ -254,13 +284,11 @@
                             typeIDs: typeIDs
                         }
                     }).then(res => {
-                        if(res.code === 200){
-                            setTimeout(function () {
-                                that.getAllType()
-                            }, 500);
+                        if(res){
+                            that.$message.success("批量删除成功");
                         }
+                        that.getAllType()
                     }).catch(res => {
-                        console.log(res);
                     })
                 }).catch(() => {
 
@@ -274,19 +302,19 @@
                 that.$refs[form].validate((valid) => {
                     if (valid) {
                         that.$axios.post(that.$api.gcodeType.addType, {
-                            newType: that.addForm.typename
+                            typeName: that.addForm.typename
                         }).then(res => {
-                            if (res.code === 200) {
-                                setTimeout(function () {
-                                    that.getAllType()
-                                }, 500);
+                            if (res) {
+                                that.$message.success("添加成功");
                             }
+                            that.getAllType()
                         }).catch(res => {
                             console.log(res);
-                        })
+                        });
+                        that.resetForm(form);
                     }
                 });
-                that.resetForm(form);
+
             },
             /**
              * 获取所有类型
@@ -295,22 +323,16 @@
                 let that = this;
                 let loading = that.$loading.service({
                     text: '正在加载',
-                    // spinner: "el-icon-loading",
                     lock: true,
                     target: document.querySelector('.el-table')
                 });
-                that.$axios.get(that.$api.gcodeType.getAllType, {
-                    params: {
-                        currentPage: this.page.currentPage,
-                        pageSize: this.page.pageSize,
-                        query: this.query
-                    }
-                }).then(res => {
-                    console.log(res);
+                that.$axios.post(that.$api.gcodeType.getAllType,
+                      that.pageQuery
+                ).then(res => {
                     loading.close();
-                    if (res.code === 200) {
-                        that.page.totalSize = res.data[1][0];
-                        that.tableData = res.data[0];
+                    if (res) {
+                        that.totalSize = res.data.data.total;
+                        that.tableData = res.data.data.records;
                     }
                 }).catch(res => {
                     loading.close();

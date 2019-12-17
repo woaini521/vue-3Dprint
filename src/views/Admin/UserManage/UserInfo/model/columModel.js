@@ -1,6 +1,16 @@
+import fa from "element-ui/src/locale/lang/fa";
+
 export default {
   new: function () {
     return{
+      'userId':{
+        'type': 'string',
+        'label': 'ID',
+        'queryable': false,
+        'defaultValue': '',
+        'width': '250px',
+        'visible': false
+      },
       'userName':{
         'type': 'string',
         'label': '账号',
@@ -40,6 +50,14 @@ export default {
         'defaultValue': '',
         'width': '250px',
         'visible': true
+      },
+      'roleId':{
+        'type': 'string',
+        'label': '角色ID',
+        'queryable': false,
+        'defaultValue': '1',
+        'width': '250px',
+        'visible': false
       },
       'operate': {
         'type': 'string',
