@@ -19,13 +19,13 @@
         <el-menu-item index="/userCenter/updatePwd">修改密码</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
-    <el-menu-item index="">
+    <el-menu-item index="/userCenter/gcodeUpload">
       <i class="el-icon-upload"></i>
-      <span slot="title">我的上传</span>
+      <span slot="title">上传模型</span>
     </el-menu-item>
-    <el-menu-item index="">
+    <el-menu-item index="/userCenter/gcodeManage">
       <i class="el-icon-download"></i>
-      <span slot="title">我的下载</span>
+      <span slot="title">模型管理</span>
     </el-menu-item>
 
   </el-menu>

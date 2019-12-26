@@ -1,7 +1,7 @@
 <template>
     <div class="footer">
       <div class="footbar">
-        版权所有
+        Copyright © 2019-2020 3D-PRINT All Rights Reserved.
       </div>
     </div>
 </template>
@@ -14,12 +14,12 @@
 
 <style scoped>
   .footer{
-    line-height: 150px;
+    line-height: 120px;
     /*background: #79BBFF;*/
     /*background: #475669;*/
     /*background: #050827;*/
     background: #292421;
-    height: 300px;
+    height: 120px;
     text-align: center;
   }
   .footer .footbar{

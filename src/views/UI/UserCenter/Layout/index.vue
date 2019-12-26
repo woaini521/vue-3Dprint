@@ -17,8 +17,8 @@
 </template>
 
 <script>
-    import Head from "../Layout/Components/Head";
-    import NavMenu from "../UserCenter/Components/NavMenu";
+    import Head from "../../Layout/Components/Head";
+    import NavMenu from "./Components/NavMenu";
     export default {
         name: "UserCenter",
         components: {NavMenu,  Head}
@@ -30,11 +30,12 @@
     width: 100%;
     height: 100%;
     background: #f2f2f2;
+    overflow-y: scroll;
     .body{
       margin-top: 100px;
-      margin-bottom: 50px;
+      margin-bottom: 80px;
       display: flex;
-      width: 70%;
+      width: 75%;
       margin-left: 15%;
       .view{
         background: #fff;

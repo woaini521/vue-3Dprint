@@ -3,6 +3,7 @@
     close-on-click-modal="false"
     :title="titleName"
     :visible.sync="bShow"
+    :close-on-click-modal="false"
     :show-close="false"
     :before-close="back">
       <el-form
@@ -11,7 +12,7 @@
         :model="dataForm"
         :rules="rules"
         label-width="120px"
-        label-position="left"
+        label-position="right"
         element-loading-text="拼命加载中">
         <el-row type="flex" justify="center">
           <el-col :span="8">
@@ -102,7 +103,7 @@
 
                 rules: {
                     nickName: [
-                        {min: 3, max: 10,message: '昵称限制3-10个字符', trigger: 'blur'},
+                        {min: 2, max: 10,message: '昵称限制2-10个字符', trigger: 'blur'},
                         {required: true, message: '昵称不能为空', trigger: 'blur'},
                         {validator: validate0, trigger: 'blur'}
                     ],

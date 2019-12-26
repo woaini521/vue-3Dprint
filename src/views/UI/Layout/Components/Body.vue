@@ -2,8 +2,8 @@
   <div class="body">
 
     <div class="carousel" id="carousel">
-      <video muted="muted" height="600" width="100%" loop autoplay>
-        <source src="http://localhost:8081/video/first5s.mp4" type="video/mp4">
+      <video height="600" width="100%" loop autoplay muted>
+        <source :src="url" type="video/mp4">
       </video>
       <div class="title">
         <div class="title_text1">3D PRINT</div>
@@ -22,19 +22,22 @@
         <div class="part">
           <div class="pic left"></div>
           <div class="text">
-            市场调研、产品定位、品牌核心价值提炼、品牌个性与品牌形象塑造、营销传播方案等策略内容。品牌形象、视觉识别系统（VI）设计、产品包装、销售道具、广告宣传品等设计内容。品牌／产品命名、Slogan、品牌故事、广告主题、创意脚本、活动标题、推文、软文等文案内容。
+            <h3>小程序</h3>
+            用户通过微信小程序或app可以轻松远程控制3D打印机对存储在云端的资源模型进行打印并将打印进度可视化呈现
           </div>
         </div>
         <div class="part">
           <div class="pic middle"></div>
           <div class="text">
-            市场调研、产品定位、品牌核心价值提炼、品牌个性与品牌形象塑造、营销传播方案等策略内容。品牌形象、视觉识别系统（VI）设计、产品包装、销售道具、广告宣传品等设计内容。品牌／产品命名、Slogan、品牌故事、广告主题、创意脚本、活动标题、推文、软文等文案内容。
+            <h3>Web</h3>
+            Web网站可以上传用户欲分享的3D打印建模，针对两种角色即管理员和普通注册用户进行设计开发
           </div>
         </div>
         <div class="part">
           <div class="pic right"></div>
           <div class="text">
-            市场调研、产品定位、品牌核心价值提炼、品牌个性与品牌形象塑造、营销传播方案等策略内容。品牌形象、视觉识别系统（VI）设计、产品包装、销售道具、广告宣传品等设计内容。品牌／产品命名、Slogan、品牌故事、广告主题、创意脚本、活动标题、推文、软文等文案内容。
+            <h3>安卓端</h3>
+            下位机安卓板作为中间件，起到连接上位机和打印机的作用，除了分发远程指令，安卓板也可直接控制打印机，实现本地打印
           </div>
         </div>
       </div>
@@ -56,7 +59,7 @@
     </div>
     <div class="more">
       <div class="text1">更多精彩模型</div>
-      <el-button type="primary" round size="medium" >更多模型</el-button>
+      <el-button type="primary" round size="medium" @click="toGcodeCenter">更多模型</el-button>
     </div>
   </div>
 </template>
@@ -80,10 +83,14 @@
                     {url: require('@/static/background/Home/timg4.jpg'),label: "艺术"}
                 ],
                 isFix: false,
+
+                url: this.$store.state.httpUrl  + "/video/first5s.mp4"
             };
         },
         methods:{
-
+            toGcodeCenter(){
+                this.$router.replace("/gcodeCenter");
+            }
         }
     }
 </script>
@@ -181,9 +188,11 @@
             transition: transform .5s;
           }
           .text{
+            width: 100%;
             margin-top: 40px;
             font-size: 16px;
             font-style: normal;
+            text-align: left;
           }
         }
 

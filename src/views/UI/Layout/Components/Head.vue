@@ -30,7 +30,7 @@
               <template v-else-if="this.$store.state.TOKEN.identity === '0'">
                 <el-dropdown @command="">
                   <span class="el-dropdown-link">
-                    管理员<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{this.$store.state.TOKEN.nickName}}<i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="usercenter" @click.native="toAdminIndex">后台管理</el-dropdown-item>
@@ -62,7 +62,7 @@
     </el-row>
 
 <!--登录弹窗-->
-    <el-dialog title="登录" :visible.sync="LoginDialogFormVisible" center :append-to-body="true" width="500px" :show-close="false">
+    <el-dialog title="登录" :visible.sync="LoginDialogFormVisible" center :append-to-body="true" width="500px" :show-close="false" :close-on-click-modal="false">
       <el-form :model="loginForm" :rules="loginRules" ref="loginForm" status-icon label-width="auto" label-position="left" size="medium" style="width: 100%; display: flex; flex-direction: column;align-items: center">
         <div style="text-align: left">
             <el-form-item label="账号" prop="username">
@@ -80,7 +80,7 @@
     </el-dialog>
 
 <!--    注册弹窗-->
-    <el-dialog title="注册" :visible.sync="RegisterdialogFormVisible" center :append-to-body="true" width="500px" :show-close="false">
+    <el-dialog title="注册" :visible.sync="RegisterdialogFormVisible" center :append-to-body="true" width="500px" :show-close="false" :close-on-click-modal="false">
         <el-form :model="registerForm" :rules="registerRules" ref="registerForm" status-icon label-width="auto" label-position="left" size="medium" style="width: 100%; display: flex; flex-direction: column; align-items: center">
           <div style="text-align: left">
             <el-form-item label="账号" prop="username">
@@ -116,6 +116,13 @@
 
         },
         data(){
+            const validate = (rule, value, callback) => {
+                if(!this.checkSpecialKey(value)){
+                    callback(new Error('不能使用特殊字符'));
+                } else {
+                    callback();
+                }
+            };
             var checkPassword = (rule,value,callback) => {
                 if(value === ''){
                     return callback(new Error('确认密码不能为空'));
@@ -131,7 +138,7 @@
                 //登录表单
                 loginForm: {
                     username: 'test',
-                    password: '123456'
+                    password: '666666'
                 },
                 // 注册表单
                 registerForm: {
@@ -155,10 +162,14 @@
                 },
                 registerRules:{
                     username:[
-                        { required: true, message: '用户名不能为空', trigger: 'blur' }
+                        { required: true, message: '用户名不能为空', trigger: 'blur' },
+                        { min: 3, max: 18, message: '长度在 3 到 18 个字符', trigger: 'blur' },
+                        {validator: validate, trigger: 'blur'}
                     ],
                     nickname:[
-                        { required: true, message: '昵称不能为空', trigger: 'blur' }
+                        {min: 2, max: 10,message: '昵称限制2-10个字符', trigger: 'blur'},
+                        {required: true, message: '昵称不能为空', trigger: 'blur'},
+                        {validator: validate, trigger: 'blur'}
                     ],
                     pwd:[
                         { required: true, message: '密码不能为空', trigger: 'blur' }
@@ -174,7 +185,15 @@
             };
         },
         methods: {
-
+            checkSpecialKey(str) {
+                const specialKey = "[`~!#$^&*()=|{}':;'\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]‘' ";
+                for (let i = 0; i < str.length; i++) {
+                    if (specialKey.indexOf(str.substr(i, 1)) !== -1) {
+                        return false;
+                    }
+                }
+                return true;
+            },
             //用户登录
             login(loginForm) {
                 let that = this;

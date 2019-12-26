@@ -114,13 +114,31 @@ const router = new Router({
             requireAuth: true,
             requireAdminAuth: true
           }
-        }
+        },
+        {
+          path: '/admin/updatePwd',
+          name: '修改密码',
+          component: () => import('../views/Admin/SysManage/UpdatePwd'),
+          meta: {
+            requireAuth: true,
+            requireAdminAuth: true
+          }
+        },
+        {
+          path: '/admin/updateInfo',
+          name: '修改资料',
+          component: () => import('../views/Admin/SysManage/UpdateInfo'),
+          meta: {
+            requireAuth: true,
+            requireAdminAuth: true
+          }
+        },
       ]
     },
     {
       path: '/userCenter',
       name: '用户中心',
-      component: ()=>import('../views/UI/UserCenter'),
+      component: ()=>import('../views/UI/UserCenter/Layout/index'),
       meta: {
         requireAuth: true
       },
@@ -128,7 +146,7 @@ const router = new Router({
         {
           path: '/userCenter/userInfo',
           name: '用户信息',
-          component: ()=>import('../views/UI/UserInfo'),
+          component: ()=>import('../views/UI/UserCenter/UserInfo'),
           meta: {
             requireAuth: true
           }
@@ -136,11 +154,27 @@ const router = new Router({
         {
           path: '/userCenter/updatePwd',
           name: '修改密码',
-          component: ()=>import('../views/UI/UpdatePwd'),
+          component: ()=>import('../views/UI/UserCenter/UpdatePwd'),
           meta: {
             requireAuth: true
           }
-        }
+        },
+        {
+          path: '/userCenter/gcodeUpload',
+          name: '我的上传',
+          component: ()=>import('../views/UI/UserCenter/GcodeUpload'),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/userCenter/gcodeManage',
+          name: '我的下载',
+          component: ()=>import('../views/UI/UserCenter/GcodeManage'),
+          meta: {
+            requireAuth: true
+          }
+        },
       ]
     },
     {

@@ -10,6 +10,7 @@ export default {
     getOne: '/userInfo/getOne',
     getList: '/userInfo/getUserList',
     resetPassword: '/userInfo/resetPassword',
+    updatePwd: '/userInfo/updatePwd',
     update: '/userInfo/update',
     delete: '/userInfo/delete',
     deleteMul: '/userInfo/deleteMul'

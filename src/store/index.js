@@ -21,7 +21,8 @@ export default new Vuex.Store({
     //tabs标签管理
     openTab:[],//所有打开的路由
     activeIndex: '/admin/index', //激活的页面路由
-    httpUrl: 'http://localhost:8081',
+    httpUrl: 'http://122.51.75.23:8081' //服务器
+    // httpUrl: 'http://localhost:8081', //本地
   },
   mutations:{
     saveName(state,name){

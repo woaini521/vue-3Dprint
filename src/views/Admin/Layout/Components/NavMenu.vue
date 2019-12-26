@@ -46,8 +46,8 @@
           <span slot="title">系统管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="3-1">修改密码</el-menu-item>
-          <el-menu-item index="3-2">修改资料</el-menu-item>
+          <el-menu-item index="/admin/updatePwd">修改密码</el-menu-item>
+          <el-menu-item index="/admin/updateInfo">修改资料</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-menu-item index="4">

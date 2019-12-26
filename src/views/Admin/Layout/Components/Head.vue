@@ -8,8 +8,7 @@
           <div class="dropdowm">
             <el-dropdown @command="">
                   <span class="el-dropdown-link">
-<!--                    {{this.$store.state.admin.adminName}}-->
-                    管理员
+                    {{this.$store.state.TOKEN.nickName}}
                     <i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
               <el-dropdown-menu slot="dropdown">
